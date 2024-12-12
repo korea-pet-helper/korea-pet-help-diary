@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:korea_pet_help_diary/ui/pages/join/formatter.dart';
+import 'package:korea_pet_help_diary/util/formatter.dart';
 
 class JoinPage extends StatefulWidget {
   @override
