@@ -62,7 +62,7 @@ class _JoinPageState extends State<JoinPage> {
                   errorText: passwordError,
                 ),
                 buildInputField(
-                  title: '비밀번호확인',
+                  title: '비밀번호확인', //비밀번호와 다를 시 에러메세지 줘야함.
                   hintText: '비밀번호를 다시 입력해 주세요',
                   obscureText: true,
                   inputFormatters: [
@@ -81,11 +81,18 @@ class _JoinPageState extends State<JoinPage> {
                 buildInputField(
                   title: '주소',
                   hintText: '주소를 입력해 주세요',
+                  suffixIcon: GestureDetector(
+                    child: Icon(Icons.gps_fixed),
+                    onTap: () {
+                      print('GPS 아이콘 클릭됨');
+                    },
+                  ),
                 ),
                 SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
+                  //아이디, 비번 빈값도 널체크해야함.
                   onPressed: idError.isEmpty && passwordError.isEmpty
                       ? () {
                           // 버튼 클릭 시 실행할 함수
@@ -121,6 +128,7 @@ class _JoinPageState extends State<JoinPage> {
     List<TextInputFormatter>? inputFormatters,
     Function(String)? onChanged,
     String? errorText,
+    Widget? suffixIcon,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -153,6 +161,7 @@ class _JoinPageState extends State<JoinPage> {
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
+              suffixIcon: suffixIcon, // suffixIcon 적용
             ),
           ),
         ],
