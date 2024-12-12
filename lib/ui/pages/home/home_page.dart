@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
+import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -57,13 +58,9 @@ class HomePage extends StatelessWidget {
           child: Row(
             children: [
               // TODO: 사진 뭐로?
-              ClipOval(
-                child: Image.network(
-                  'https://picsum.photos/200/300',
-                  height: 60,
-                  width: 60,
-                  fit: BoxFit.fill,
-                ),
+              UserProfileImage(
+                size: 60,
+                imageUrl: 'https://picsum.photos/200/300',
               ),
               const SizedBox(width: 10),
               Expanded(
