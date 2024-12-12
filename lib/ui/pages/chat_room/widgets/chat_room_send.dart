@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ChatRoomSend extends StatelessWidget {
+  String message;
+  ChatRoomSend({required this.message});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -29,7 +32,7 @@ class ChatRoomSend extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Text(
               softWrap: true,
-              '안녕하세요 처음 뵙겠습니다!안녕하세요 처음 뵙겠습니다!',
+              message,
               style: TextStyle(
                 fontSize: 18,
               ),

@@ -4,7 +4,8 @@ import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 class ChatRoomReceive extends StatelessWidget {
   // true: 프로필 보이기 false: 프로필 안보이기
   bool showProfile;
-  ChatRoomReceive({required this.showProfile});
+  String message;
+  ChatRoomReceive({required this.showProfile, required this.message});
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +19,7 @@ class ChatRoomReceive extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
+              // 프로필 사진만큼 앞 부분 띄기
               const SizedBox(width: 50, height: 50),
               Container(
                 // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
@@ -30,7 +32,7 @@ class ChatRoomReceive extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   softWrap: true,
-                  '안녕하세요 처음 뵙겠습니다!안녕하세요 처음 뵙겠습니다!',
+                  message,
                   style: TextStyle(
                     fontSize: 18,
                   ),
