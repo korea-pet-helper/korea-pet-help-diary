@@ -2,7 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/formatter.dart';
 
-class JoinPage extends StatelessWidget {
+class JoinPage extends StatefulWidget {
+  @override
+  _JoinPageState createState() => _JoinPageState();
+}
+
+class _JoinPageState extends State<JoinPage> {
+  String idError = ''; //최소글자수 미만일 때 사용
+  String passwordError = ''; //최소글자수 미만일 때 사용
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +32,15 @@ class JoinPage extends StatelessWidget {
                 buildInputField(
                   title: '아이디',
                   hintText: '아이디를 입력해 주세요',
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20), // 최대 글자수 제한
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      idError = value.length < 5 ? '아이디는 최소 5자 이상이어야 합니다.' : '';
+                    });
+                  },
+                  errorText: idError,
                 ),
                 buildInputField(
                   title: '이름',
@@ -33,11 +50,24 @@ class JoinPage extends StatelessWidget {
                   title: '비밀번호',
                   hintText: '비밀번호를 입력해 주세요',
                   obscureText: true,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(16), // 최대 글자수 제한
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      passwordError =
+                          value.length < 8 ? '비밀번호는 최소 8자 이상이어야 합니다.' : '';
+                    });
+                  },
+                  errorText: passwordError,
                 ),
                 buildInputField(
                   title: '비밀번호확인',
                   hintText: '비밀번호를 다시 입력해 주세요',
                   obscureText: true,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(16),
+                  ],
                 ),
                 buildInputField(
                   title: '전화번호',
@@ -56,9 +86,11 @@ class JoinPage extends StatelessWidget {
                   height: 20,
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    // 버튼 클릭 시 실행할 함수
-                  },
+                  onPressed: idError.isEmpty && passwordError.isEmpty
+                      ? () {
+                          // 버튼 클릭 시 실행할 함수
+                        }
+                      : null, // 유효하지 않으면 버튼 비활성화
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF2A52BE),
                     foregroundColor: Colors.white,
@@ -86,7 +118,9 @@ class JoinPage extends StatelessWidget {
     required String hintText,
     bool obscureText = false,
     TextInputType keyboardType = TextInputType.text,
-    List<TextInputFormatter>? inputFormatters, //inputFormatters 매개변수
+    List<TextInputFormatter>? inputFormatters,
+    Function(String)? onChanged,
+    String? errorText,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -103,6 +137,7 @@ class JoinPage extends StatelessWidget {
             obscureText: obscureText, // 비밀번호 여부 처리
             keyboardType: keyboardType, // 키보드 유형 처리
             inputFormatters: inputFormatters, // 입력 포맷터 적용
+            onChanged: onChanged, // 입력값 변경 시 처리
             decoration: InputDecoration(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 11,
@@ -113,6 +148,7 @@ class JoinPage extends StatelessWidget {
                 color: Colors.grey,
                 fontSize: 14,
               ),
+              errorText: errorText, // 에러 메시지 표시
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.grey),
