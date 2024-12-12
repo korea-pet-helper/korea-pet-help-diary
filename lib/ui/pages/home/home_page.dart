@@ -14,6 +14,7 @@ class HomePage extends StatelessWidget {
               // TODO: myProfile 페이지로 이동
               print('myProfile 이동');
             },
+            // 내 프로필 페이지로 이동할 아이콘
             child: Container(
               height: 50,
               width: 50,
@@ -23,6 +24,7 @@ class HomePage extends StatelessWidget {
           )
         ],
       ),
+      // 채팅방 리스트
       body: ListView.builder(
         itemCount: 4,
         itemBuilder: (context, index) {
@@ -32,11 +34,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
+  /// 채팅방 박스
   Widget item() {
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
-          // TODO: chat_room 페이지로 이동
+          // 채팅방으로 이동
           Navigator.push(
             context,
             MaterialPageRoute(

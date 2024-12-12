@@ -15,11 +15,14 @@ class ChatRoomBottomsheet extends StatelessWidget {
         top: 10,
         left: 20,
         right: 20,
-        bottom: bottomPaddingSize,
+        // padding + top 에 준 값까지 -> 키보드 올리면 키보드랑 TextField 랑 붙어보이는 거 때문
+        bottom: bottomPaddingSize + 10,
       ),
       child: Row(
         children: [
           Expanded(
+            // TODO: send 눌렀을 때 키보드 없어지는 문제 확인하기...
+            // 메시지 보내는 거
             child: TextField(
               controller: controller,
               textInputAction: TextInputAction.send,
@@ -36,6 +39,7 @@ class ChatRoomBottomsheet extends StatelessWidget {
               // 메시지 전달
               print('메시지 전달');
             },
+            // 보내는 아이콘
             child: Container(
               height: 50,
               width: 50,
@@ -46,7 +50,7 @@ class ChatRoomBottomsheet extends StatelessWidget {
                 color: ceruleanBlue,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

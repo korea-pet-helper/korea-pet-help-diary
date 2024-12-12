@@ -15,12 +15,12 @@ class ChatRoomReceive extends StatelessWidget {
         children: [
           // showProfile 가 true 면 프로필 보이기 false 면 빈 박스
           showProfile == true ? reciverProfile() : const SizedBox(),
-          // 메시지 내용
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // 프로필 사진만큼 앞 부분 띄기
               const SizedBox(width: 50, height: 50),
+              // 메시지 내용
               Container(
                 // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
                 height: 80,

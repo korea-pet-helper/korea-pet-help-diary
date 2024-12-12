@@ -27,9 +27,11 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
 
   @override
   Widget build(BuildContext context) {
+    // 아이폰 언더바 같은 부분 padding 값
     final bottomPaddingSize = MediaQuery.paddingOf(context).bottom;
 
     return GestureDetector(
+      // 키보드 외 다른 곳 눌렀을 때 키보드 unfocus
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
