@@ -1,5 +1,20 @@
 import 'package:flutter/material.dart';
 
+final ThemeData appTheme = ThemeData(
+  appBarTheme: appBarTheme,
+  inputDecorationTheme: InputDecorationTheme(
+    contentPadding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
+    hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: const BorderSide(color: Colors.grey),
+    ),
+  ),
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: elevatedButtonStyle,
+  ),
+);
+
 // appBarTheme: 모든 AppBar에 기본적으로 적용될 스타일 정의
 final appBarTheme = AppBarTheme(
   // color: AppBar의 배경 색상
