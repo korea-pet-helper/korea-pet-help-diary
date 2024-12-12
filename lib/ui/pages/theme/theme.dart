@@ -1,54 +1,28 @@
 import 'package:flutter/material.dart';
 
-// 전체 테마를 정의하는 ThemeData 인스턴스 생성
-final ThemeData appTheme = ThemeData(
-  // 기본 색상을 설정 (여기서는 파란색 계열을 사용)
-  primarySwatch: Colors.blue,
-
-  // 앱바(AppBar) 테마 설정
-  appBarTheme: AppBarTheme(
-    color: Colors.blue, // 앱바 배경색 설정
-    titleTextStyle: TextStyle(
-      color: Colors.white, // 앱바 제목 텍스트 색상 설정
-      fontSize: 20, // 앱바 제목 텍스트 크기 설정
-      fontWeight: FontWeight.bold, // 앱바 제목 텍스트 굵기 설정
-    ),
+// appBarTheme: 모든 AppBar에 기본적으로 적용될 스타일 정의
+final appBarTheme = AppBarTheme(
+  // color: AppBar의 배경 색상
+  color: Color(0xFF2A52BE),
+  // titleTextStyle: AppBar 타이틀의 텍스트 스타일
+  titleTextStyle: TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
   ),
+);
 
-  // 텍스트 테마 설정
-  textTheme: TextTheme(
-    bodyLarge: TextStyle(
-      color: Colors.black, // 기본 텍스트 색상 설정
-      fontSize: 16, // 기본 텍스트 크기 설정
-    ),
-    bodyMedium: TextStyle(
-      color: Colors.black, // 기본 텍스트 색상 설정
-      fontSize: 14, // 기본 텍스트 크기 설정
-    ),
-  ),
-
-  // 입력 필드(InputDecoration) 테마 설정
-  inputDecorationTheme: InputDecorationTheme(
-    border: OutlineInputBorder(), // 기본 테두리 스타일 설정
-    focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.blue), // 포커스 상태일 때 테두리 색상 설정
-    ),
-    labelStyle: TextStyle(
-      color: Colors.blue, // 레이블 텍스트 색상 설정
-    ),
-  ),
-
-  // 기본 버튼 스타일 테마 설정
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(
-      backgroundColor: Colors.blue, // 기본 버튼 배경색 설정
-      foregroundColor: Colors.white, // 기본 버튼 텍스트 색상 설정
-      textStyle: TextStyle(
-        fontSize: 16, // 기본 버튼 텍스트 크기 설정
-        fontWeight: FontWeight.bold, // 기본 버튼 텍스트 굵기 설정
-      ),
-      minimumSize: Size(600, 60), // 버튼의 최소 크기 설정
-      padding: EdgeInsets.symmetric(horizontal: 20), // 버튼 내 패딩 설정
-    ),
+// inputDecoration: 모든 텍스트 필드에 기본적으로 적용될 스타일 정의
+final inputDecoration = InputDecoration(
+  // contentPadding: 입력 내용의 좌우 여백과 상하 여백
+  contentPadding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
+  // hintStyle: 힌트 텍스트의 스타일 (색상과 크기)
+  hintStyle: const TextStyle(color: Colors.grey, fontSize: 14),
+  // border: 텍스트 필드의 테두리 스타일
+  border: OutlineInputBorder(
+    // borderRadius: 테두리의 모서리를 둥글게 처리
+    borderRadius: BorderRadius.circular(10),
+    // borderSide: 테두리의 색상과 스타일 정의
+    borderSide: const BorderSide(color: Colors.grey),
   ),
 );
