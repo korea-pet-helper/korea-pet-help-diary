@@ -26,3 +26,19 @@ final inputDecoration = InputDecoration(
     borderSide: const BorderSide(color: Colors.grey),
   ),
 );
+
+// elevatedButtonStyle: 모든 ElevatedButton에 기본적으로 적용될 스타일 정의
+final elevatedButtonStyle = ElevatedButton.styleFrom(
+  // backgroundColor: 버튼의 배경 색상
+  backgroundColor: Color(0xFF2A52BE),
+  // foregroundColor: 버튼의 텍스트 색상
+  foregroundColor: Colors.white,
+  // minimumSize: 버튼의 최소 크기 (너비와 높이)
+  minimumSize: Size(double.infinity, 50),
+  // elevation: 버튼의 그림자 깊이
+  elevation: 5,
+  // shape: 버튼의 모양 (모서리를 둥글게 처리)
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(10),
+  ),
+);
