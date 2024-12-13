@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1070079099662",
+    "project_id": "korea-pet-help-diary",
+    "storage_bucket": "korea-pet-help-diary.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070079099662:android:25c1b65204f4d4ca658d5f",
+        "android_client_info": {
+          "package_name": "com.example.korea_per_help_diary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5WwdSHyMdlVUylf_xsIk8J1iKIF4tCaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1070079099662:android:e3bd30067242ff7d658d5f",
+        "android_client_info": {
+          "package_name": "com.example.korea_pet_help_diary"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5WwdSHyMdlVUylf_xsIk8J1iKIF4tCaA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
