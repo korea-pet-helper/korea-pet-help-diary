@@ -57,3 +57,8 @@ final elevatedButtonStyle = ElevatedButton.styleFrom(
     borderRadius: BorderRadius.circular(10),
   ),
 );
+
+final bottomSheetStyle = BottomSheetThemeData(
+  // backgroundColor: 바텀 시트의 배경 색상
+  backgroundColor: Colors.white,
+);
