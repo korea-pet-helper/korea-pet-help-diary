@@ -4,6 +4,7 @@ import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/home/home_view_model.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
+import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
 class HomePage extends StatelessWidget {
   String localCode;
@@ -87,7 +88,7 @@ class HomePage extends StatelessWidget {
                         ),
                         const Spacer(),
                         Text(
-                          preview.timeStamp.toIso8601String(),
+                          DateTimeFormat.formatString(preview.timeStamp),
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
