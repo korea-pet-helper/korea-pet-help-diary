@@ -3,7 +3,7 @@ import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
 
 class ChatPreviewRepository {
   /// 근처 지역 채팅방 가져오기
-  Future<List<ChatPreview?>> getPreview(int localCode) async {
+  Future<List<ChatPreview?>> getPreview(List<String> localsCode) async {
     try {
       // 1. 파이어스토어 인스턴스
       final firestore = FirebaseFirestore.instance;
@@ -15,11 +15,13 @@ class ChatPreviewRepository {
       final docs = result.docs;
 
       return docs.map((doc) {
-        // TODO: 근처 지역 코드 5개 가져오기
-        if (doc.id == '28260122') {
-          final recentMessage = doc.data()['recentMessage'];
+        for (var code in localsCode) {
+          // 동네 코드가 맞는 chat 문서의 recentMessage 가져오기
+          if (doc.id == code) {
+            final recentMessage = doc.data()['recentMessage'];
 
-          return ChatPreview.fronJson(recentMessage);
+            return ChatPreview.fronJson(recentMessage);
+          }
         }
       }).toList();
     } catch (e) {

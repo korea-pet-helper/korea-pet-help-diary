@@ -1,41 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
+import 'package:korea_pet_help_diary/ui/pages/home/home_view_model.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 
 class HomePage extends StatelessWidget {
+  String localCode;
+  HomePage({required this.localCode});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('삼성동'),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              // TODO: myProfile 페이지로 이동
-              print('myProfile 이동');
-            },
-            // 내 프로필 페이지로 이동할 아이콘
-            child: Container(
-              height: 50,
-              width: 50,
-              color: Colors.transparent,
-              child: Icon(Icons.person),
-            ),
-          )
-        ],
-      ),
-      // 채팅방 리스트
-      body: ListView.builder(
-        itemCount: 4,
-        itemBuilder: (context, index) {
-          return item();
-        },
-      ),
-    );
+    return Consumer(builder: (context, ref, child) {
+      final state = ref.watch(homeViewModelProvider(localCode));
+      return Scaffold(
+        appBar: AppBar(
+          // TODO: 유저의 동네 가져오기
+          title: Text('삼성동'),
+          actions: [
+            GestureDetector(
+              onTap: () {
+                // TODO: myProfile 페이지로 이동
+                print('myProfile 이동');
+              },
+              // 내 프로필 페이지로 이동할 아이콘
+              child: Container(
+                height: 50,
+                width: 50,
+                color: Colors.transparent,
+                child: Icon(Icons.person),
+              ),
+            )
+          ],
+        ),
+        // 채팅방 리스트
+        body: ListView.builder(
+          itemCount: state.length,
+          itemBuilder: (context, index) {
+            return item(state[index]!);
+          },
+        ),
+      );
+    });
   }
 
   /// 채팅방 박스
-  Widget item() {
+  Widget item(ChatPreview preview) {
     return Builder(builder: (context) {
       return GestureDetector(
         onTap: () {
@@ -60,10 +70,9 @@ class HomePage extends StatelessWidget {
           ),
           child: Row(
             children: [
-              // TODO: 사진 뭐로?
               UserProfileImage(
                 size: 60,
-                imageUrl: 'https://picsum.photos/200/300',
+                imageUrl: preview.thumbnail,
               ),
               const SizedBox(width: 10),
               Expanded(
@@ -73,19 +82,19 @@ class HomePage extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '숭의동',
+                          preview.local,
                           style: TextStyle(fontSize: 20),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Text(
-                          '30분 전',
+                          preview.timeStamp.toIso8601String(),
                           style: TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
-                      '안녕하세요. 반갑습니다.',
+                      preview.message,
                       style: TextStyle(
                         fontSize: 18,
                         color: Colors.black54,
