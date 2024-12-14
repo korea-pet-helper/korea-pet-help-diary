@@ -47,120 +47,141 @@ class _JoinPageState extends ConsumerState<JoinPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                buildInputField(
-                  title: '아이디',
-                  hintText: '아이디를 입력해 주세요',
-                  textEditingController: idTextEditingController,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20), // 최대 글자수 제한
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      idError = value.length < 5 ? '아이디는 최소 5자 이상이어야 합니다.' : '';
-                    });
-                  },
-                  errorText: idError,
-                ),
-                buildInputField(
-                  title: '이름',
-                  hintText: '이름을 입력해 주세요',
-                  textEditingController: nameTextEditingController,
-                ),
-                buildInputField(
-                  title: '비밀번호',
-                  hintText: '비밀번호를 입력해 주세요',
-                  textEditingController: passwordTextEditingController,
-                  obscureText: true,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(16), // 최대 글자수 제한
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      passwordError =
-                          value.length < 8 ? '비밀번호는 최소 8자 이상이어야 합니다.' : '';
-                    });
-                  },
-                  errorText: passwordError,
-                ),
-                buildInputField(
-                  title: '비밀번호확인', // 비밀번호와 다를 시 에러 메시지 줘야 함.
-                  hintText: '비밀번호를 다시 입력해 주세요',
-                  textEditingController: password2TextEditingController,
-                  obscureText: true,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(16),
-                  ],
-                ),
-                buildInputField(
-                  title: '전화번호',
-                  hintText: '000-0000-0000',
-                  textEditingController: phoneTextEditingController,
-                  keyboardType: TextInputType.phone,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly, // 숫자만 입력 가능
-                    PhoneNumberFormatter(), // 전화번호 형식 지정
-                  ],
-                ),
-                buildInputField(
-                  title: '주소',
-                  hintText: '주소를 입력해 주세요',
-                  textEditingController: localTextEditingController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: idError.isEmpty &&
-                          passwordError.isEmpty &&
-                          idTextEditingController.text.isNotEmpty &&
-                          passwordTextEditingController.text.isNotEmpty
-                      ? () async {
-                          try {
-                            // 입력값 가져오기
-                            await saveUserData(
-                              userId: idTextEditingController.text.trim(),
-                              image: "default_image_url", // 이미지 기본값
-                              local: localTextEditingController.text.trim(),
-                              localCode: "default_local_code", // 지역 코드 기본값
-                              nickname: nameTextEditingController.text.trim(),
-                              password:
-                                  passwordTextEditingController.text.trim(),
-                              phone: phoneTextEditingController.text.trim(),
-                              petName: '',
-                              petAge: 0,
-                              petDogCat: '',
-                              petInformation: '',
-                            );
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('회원가입이 완료되었습니다!'),
-                            ));
-                          } catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              content: Text('회원가입 중 오류가 발생했습니다: $e'),
-                            ));
-                          }
-                        }
-                      : null, // 유효하지 않으면 버튼 비활성화
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF2A52BE),
-                    foregroundColor: Colors.white,
-                    minimumSize: Size(double.infinity, 50),
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    height: 100,
+                    width: 120,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    child: Icon(Icons.camera_alt),
                   ),
-                  child: Text(
-                    '가입하기',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-              ],
+                  buildInputField(
+                    title: '아이디',
+                    hintText: '아이디를 입력해 주세요',
+                    textEditingController: idTextEditingController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(20), // 최대 글자수 제한
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        idError =
+                            value.length < 5 ? '아이디는 최소 5자 이상이어야 합니다.' : '';
+                      });
+                    },
+                    errorText: idError,
+                  ),
+                  buildInputField(
+                    title: '이름',
+                    hintText: '이름을 입력해 주세요',
+                    textEditingController: nameTextEditingController,
+                  ),
+                  buildInputField(
+                    title: '비밀번호',
+                    hintText: '비밀번호를 입력해 주세요',
+                    textEditingController: passwordTextEditingController,
+                    obscureText: true,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(16), // 최대 글자수 제한
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        passwordError =
+                            value.length < 8 ? '비밀번호는 최소 8자 이상이어야 합니다.' : '';
+                      });
+                    },
+                    errorText: passwordError,
+                  ),
+                  buildInputField(
+                    title: '비밀번호확인', // 비밀번호와 다를 시 에러 메시지 줘야 함.
+                    hintText: '비밀번호를 다시 입력해 주세요',
+                    textEditingController: password2TextEditingController,
+                    obscureText: true,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(16),
+                    ],
+                  ),
+                  buildInputField(
+                    title: '전화번호',
+                    hintText: '000-0000-0000',
+                    textEditingController: phoneTextEditingController,
+                    keyboardType: TextInputType.phone,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly, // 숫자만 입력 가능
+                      PhoneNumberFormatter(), // 전화번호 형식 지정
+                    ],
+                  ),
+                  buildInputField(
+                    title: '주소',
+                    hintText: '주소를 입력해 주세요',
+                    textEditingController: localTextEditingController,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  ElevatedButton(
+                    onPressed: idError.isEmpty &&
+                            passwordError.isEmpty &&
+                            idTextEditingController.text.isNotEmpty &&
+                            passwordTextEditingController.text.isNotEmpty
+                        ? () async {
+                            try {
+                              // 입력값 가져오기
+                              await saveUserData(
+                                userId: idTextEditingController.text.trim(),
+                                image: "default_image_url", // 이미지 기본값
+                                local: localTextEditingController.text.trim(),
+                                localCode: "default_local_code", // 지역 코드 기본값
+                                nickname: nameTextEditingController.text.trim(),
+                                password:
+                                    passwordTextEditingController.text.trim(),
+                                phone: phoneTextEditingController.text.trim(),
+                                petName: '',
+                                petAge: 0,
+                                petDogCat: '',
+                                petInformation: '',
+                              );
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('회원가입이 완료되었습니다!'),
+                              ));
+                            } catch (e) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: Text('회원가입 중 오류가 발생했습니다: $e'),
+                              ));
+                            }
+                          }
+                        : null, // 유효하지 않으면 버튼 비활성화
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF2A52BE),
+                      foregroundColor: Colors.white,
+                      minimumSize: Size(double.infinity, 50),
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                    child: Text(
+                      '가입하기',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
