@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:korea_pet_help_diary/ui/pages/join/geolocator_helper.dart';
 import 'package:path/path.dart' as path;
 import 'firebase_user_creat.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
@@ -15,8 +16,21 @@ class JoinPage extends ConsumerStatefulWidget {
 
 class _JoinPageState extends ConsumerState<JoinPage> {
   String idError = '';
+  String nameError = '';
+
   String passwordError = '';
   String passwordCheckError = '';
+  String phoneError = '';
+  String localCode = '';
+
+  //정상 작성여부 확인
+  bool imagePass = false;
+  bool idPass = false;
+  bool namePass = false;
+  bool passwordPass = false;
+  bool passwprd2Pass = false;
+  bool phonePass = false;
+  bool localPass = false;
 
   TextEditingController idTextEditingController = TextEditingController();
   TextEditingController nameTextEditingController = TextEditingController();
@@ -90,6 +104,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                       if (xfile != null) {
                         setState(() {
                           selectedImage = xfile;
+                          imagePass = true;
                         });
                       }
                     },
@@ -123,8 +138,12 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     ],
                     onChanged: (value) {
                       setState(() {
-                        idError =
-                            value.length < 5 ? '아이디는 최소 5자 이상이어야 합니다.' : '';
+                        if (value.length < 5) {
+                          idError = '아이디는 최소 5자 이상이어야 합니다.';
+                        } else {
+                          idError = '';
+                          idPass = true;
+                        }
                       });
                     },
                     errorText: idError,
@@ -133,6 +152,20 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     title: '이름',
                     hintText: '이름을 입력해 주세요',
                     textEditingController: nameTextEditingController,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(20),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        if (value.length < 1) {
+                          nameError = '이름은 최소 1자 이상이어야 합니다.';
+                        } else {
+                          nameError = '';
+                          namePass = true;
+                        }
+                      });
+                    },
+                    errorText: nameError,
                   ),
                   buildInputField(
                     title: '비밀번호',
@@ -144,8 +177,12 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     ],
                     onChanged: (value) {
                       setState(() {
-                        passwordError =
-                            value.length < 8 ? '비밀번호는 최소 8자 이상이어야 합니다.' : '';
+                        if (value.length < 4) {
+                          passwordError = '비밀번호는 최소 4자 이상이어야 합니다.';
+                        } else {
+                          passwordError = '';
+                          passwordPass = true;
+                        }
                       });
                     },
                     errorText: passwordError,
@@ -160,11 +197,13 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     ],
                     onChanged: (value) {
                       setState(() {
-                        passwordCheckError =
-                            passwordTextEditingController.text !=
-                                    password2TextEditingController.text
-                                ? '입력하신 비밀번호가 다릅니다.'
-                                : '';
+                        if (passwordTextEditingController.text !=
+                            password2TextEditingController.text) {
+                          passwordCheckError = '입력하신 비밀번호가 다릅니다.';
+                        } else {
+                          passwordCheckError = '';
+                          passwprd2Pass = true;
+                        }
                       });
                     },
                     errorText: passwordCheckError,
@@ -178,18 +217,92 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                       FilteringTextInputFormatter.digitsOnly, // 숫자만 입력 가능
                       PhoneNumberFormatter(), // 전화번호 형식 지정
                     ],
+                    onChanged: (value) {
+                      setState(() {
+                        if (phoneTextEditingController.text.length < 13) {
+                          phoneError = '전화번호를 올바르게 입력해주세요.';
+                        } else {
+                          phoneError = '';
+                          phonePass = true;
+                        }
+                      });
+                    },
+                    errorText: phoneError,
                   ),
-                  buildInputField(
-                    title: '주소',
-                    hintText: '주소를 입력해 주세요',
-                    textEditingController: localTextEditingController,
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              '주소',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            SizedBox(
+                              height: 50,
+                              width: 50,
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    // GeolocatorHelper에서 행정구역 정보를 가져오기
+                                    Map<String, dynamic>? localMap =
+                                        await GeolocatorHelper
+                                            .getAdministrativeArea();
+                                    print(localMap!['name']);
+
+                                    setState(() {
+                                      // 반환된 localName을 TextEditingController의 text에 반영
+                                      if (localMap['name'] != null) {
+                                        localTextEditingController.text =
+                                            localMap['name'];
+                                        localCode = localMap['code'];
+                                        localPass = true;
+                                      } else {
+                                        localTextEditingController.text =
+                                            "주소를 가져오지 못했습니다.";
+                                      }
+
+                                      print(localCode);
+                                    });
+                                  },
+                                  child: Icon(Icons.gps_fixed)),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        TextField(
+                          controller: localTextEditingController,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 11,
+                              vertical: 11,
+                            ),
+                            hintText: 'GPS 아이콘을 터치해주세요.',
+                            hintStyle: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 14,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            enabled: false,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: idError.isEmpty &&
-                            passwordError.isEmpty &&
-                            idTextEditingController.text.isNotEmpty &&
-                            passwordTextEditingController.text.isNotEmpty
+                    onPressed: imagePass &&
+                            idPass &&
+                            namePass &&
+                            passwordPass &&
+                            passwprd2Pass &&
+                            phonePass &&
+                            localPass
                         ? () async {
                             // Firebase Storage에 이미지 업로드
                             String url =
@@ -202,7 +315,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                                 userId: idTextEditingController.text.trim(),
                                 image: url, // 이미지 경로
                                 local: localTextEditingController.text.trim(),
-                                localCode: "default_local_code",
+                                localCode: localCode,
                                 nickname: nameTextEditingController.text.trim(),
                                 password:
                                     passwordTextEditingController.text.trim(),
@@ -257,7 +370,6 @@ class _JoinPageState extends ConsumerState<JoinPage> {
     List<TextInputFormatter>? inputFormatters,
     Function(String)? onChanged,
     String? errorText,
-    Widget? suffixIcon,
   }) {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10),
@@ -295,7 +407,10 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
-              suffixIcon: suffixIcon,
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
             ),
           ),
         ],
