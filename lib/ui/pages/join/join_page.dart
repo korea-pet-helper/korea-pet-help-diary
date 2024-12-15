@@ -1,8 +1,12 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:korea_pet_help_diary/util/formatter.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:path/path.dart' as path;
 import 'firebase_user_creat.dart';
+import 'package:korea_pet_help_diary/util/formatter.dart';
 
 class JoinPage extends ConsumerStatefulWidget {
   @override
@@ -10,10 +14,10 @@ class JoinPage extends ConsumerStatefulWidget {
 }
 
 class _JoinPageState extends ConsumerState<JoinPage> {
-  String idError = ''; // 최소 글자수 미만일 때 사용
-  String passwordError = ''; // 최소 글자수 미만일 때 사용
+  String idError = '';
+  String passwordError = '';
+  String passwordCheckError = '';
 
-  // 컨트롤러 생성
   TextEditingController idTextEditingController = TextEditingController();
   TextEditingController nameTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
@@ -22,9 +26,11 @@ class _JoinPageState extends ConsumerState<JoinPage> {
   TextEditingController phoneTextEditingController = TextEditingController();
   TextEditingController localTextEditingController = TextEditingController();
 
+  XFile? selectedImage;
+  String? uploadedImageUrl;
+
   @override
   void dispose() {
-    // 컨트롤러 해제
     idTextEditingController.dispose();
     nameTextEditingController.dispose();
     passwordTextEditingController.dispose();
@@ -32,6 +38,27 @@ class _JoinPageState extends ConsumerState<JoinPage> {
     phoneTextEditingController.dispose();
     localTextEditingController.dispose();
     super.dispose();
+  }
+
+  // Firebase Storage에 이미지 업로드
+  Future<String> _uploadImageToFirebase(XFile image) async {
+    try {
+      // 파일명 생성
+      String fileName = path.basename(image.path);
+
+      // Firebase Storage 경로 지정 및 업로드
+      Reference storageRef =
+          FirebaseStorage.instance.ref().child('users/$fileName');
+      UploadTask uploadTask = storageRef.putFile(File(image.path));
+
+      // 업로드 완료 후 URL 가져오기
+      TaskSnapshot snapshot = await uploadTask;
+      String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      return downloadUrl;
+    } catch (e) {
+      throw Exception('이미지 업로드 실패: $e');
+    }
   }
 
   @override
@@ -53,27 +80,46 @@ class _JoinPageState extends ConsumerState<JoinPage> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    height: 100,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(10),
+                  SizedBox(height: 20),
+                  GestureDetector(
+                    onTap: () async {
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? xfile = await imagePicker.pickImage(
+                          source: ImageSource.gallery);
+
+                      if (xfile != null) {
+                        setState(() {
+                          selectedImage = xfile;
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[300],
+                        borderRadius: BorderRadius.circular(10),
+                        image: selectedImage != null
+                            ? DecorationImage(
+                                image: FileImage(
+                                  File(selectedImage!.path),
+                                ),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                      child: selectedImage == null
+                          ? Icon(Icons.camera_alt, color: Colors.grey)
+                          : null,
                     ),
-                    child: Icon(Icons.camera_alt),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   buildInputField(
                     title: '아이디',
                     hintText: '아이디를 입력해 주세요',
                     textEditingController: idTextEditingController,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(20), // 최대 글자수 제한
+                      LengthLimitingTextInputFormatter(20),
                     ],
                     onChanged: (value) {
                       setState(() {
@@ -105,13 +151,23 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     errorText: passwordError,
                   ),
                   buildInputField(
-                    title: '비밀번호확인', // 비밀번호와 다를 시 에러 메시지 줘야 함.
+                    title: '비밀번호확인',
                     hintText: '비밀번호를 다시 입력해 주세요',
                     textEditingController: password2TextEditingController,
                     obscureText: true,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(16),
                     ],
+                    onChanged: (value) {
+                      setState(() {
+                        passwordCheckError =
+                            passwordTextEditingController.text !=
+                                    password2TextEditingController.text
+                                ? '입력하신 비밀번호가 다릅니다.'
+                                : '';
+                      });
+                    },
+                    errorText: passwordCheckError,
                   ),
                   buildInputField(
                     title: '전화번호',
@@ -128,22 +184,25 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     hintText: '주소를 입력해 주세요',
                     textEditingController: localTextEditingController,
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: idError.isEmpty &&
                             passwordError.isEmpty &&
                             idTextEditingController.text.isNotEmpty &&
                             passwordTextEditingController.text.isNotEmpty
                         ? () async {
+                            // Firebase Storage에 이미지 업로드
+                            String url =
+                                await _uploadImageToFirebase(selectedImage!);
+                            setState(() {
+                              uploadedImageUrl = url; // 업로드된 URL 저장
+                            });
                             try {
-                              // 입력값 가져오기
                               await saveUserData(
                                 userId: idTextEditingController.text.trim(),
-                                image: "default_image_url", // 이미지 기본값
+                                image: url, // 이미지 경로
                                 local: localTextEditingController.text.trim(),
-                                localCode: "default_local_code", // 지역 코드 기본값
+                                localCode: "default_local_code",
                                 nickname: nameTextEditingController.text.trim(),
                                 password:
                                     passwordTextEditingController.text.trim(),
@@ -164,7 +223,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                               ));
                             }
                           }
-                        : null, // 유효하지 않으면 버튼 비활성화
+                        : null,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF2A52BE),
                       foregroundColor: Colors.white,
@@ -228,7 +287,11 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                 fontSize: 14,
               ),
               errorText: errorText,
-              border: OutlineInputBorder(
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),
                 borderSide: const BorderSide(color: Colors.grey),
               ),
