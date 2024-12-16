@@ -8,7 +8,7 @@ class ChatRoomSend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double maxWidth = MediaQuery.of(context).size.width - 180;
+    double maxWidth = MediaQuery.of(context).size.width - 80;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
