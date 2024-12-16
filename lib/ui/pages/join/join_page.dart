@@ -4,7 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:korea_pet_help_diary/ui/pages/join/geolocator_helper.dart';
+import 'package:korea_pet_help_diary/util/geolocator_helper.dart';
+import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_image_picker_ui.dart';
+import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_textfeild_method.dart';
 import 'package:path/path.dart' as path;
 import 'firebase_user_creat.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
@@ -34,6 +36,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
   bool phonePass = false;
   bool localPass = false;
 
+//텍스트 에디팅 컨트롤러 선언.
   TextEditingController idTextEditingController = TextEditingController();
   TextEditingController nameTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
@@ -79,6 +82,9 @@ class _JoinPageState extends ConsumerState<JoinPage> {
 
   @override
   Widget build(BuildContext context) {
+    //텍스트 필드 그려주는 클래스에 접근근
+    JoinTextfeildMethod joinTextfeildMethod = JoinTextfeildMethod();
+    JoinImagePickerUi joinImagePickerUi = JoinImagePickerUi();
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -86,6 +92,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
       ),
+      //언포커스를 하기 위한 제스쳐디텍터
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -110,28 +117,10 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                         });
                       }
                     },
-                    child: Container(
-                      height: 100,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(10),
-                        image: selectedImage != null
-                            ? DecorationImage(
-                                image: FileImage(
-                                  File(selectedImage!.path),
-                                ),
-                                fit: BoxFit.cover,
-                              )
-                            : null,
-                      ),
-                      child: selectedImage == null
-                          ? Icon(Icons.camera_alt, color: Colors.grey)
-                          : null,
-                    ),
+                    child: joinImagePickerUi.imagePickerUi(selectedImage),
                   ),
                   SizedBox(height: 20),
-                  buildInputField(
+                  joinTextfeildMethod.buildInputField(
                     title: '아이디',
                     hintText: '아이디를 입력해 주세요',
                     textEditingController: idTextEditingController,
@@ -189,7 +178,9 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     child: Container(
                       height: 40,
                       width: 120,
-                      color: Colors.grey[300],
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10)),
                       child: Center(
                         child: Text(
                           '아이디 중복 체크',
@@ -199,7 +190,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     ),
                   ),
 
-                  buildInputField(
+                  joinTextfeildMethod.buildInputField(
                     title: '이름',
                     hintText: '이름을 입력해 주세요',
                     textEditingController: nameTextEditingController,
@@ -218,7 +209,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     },
                     errorText: nameError,
                   ),
-                  buildInputField(
+                  joinTextfeildMethod.buildInputField(
                     title: '비밀번호',
                     hintText: '비밀번호를 입력해 주세요',
                     textEditingController: passwordTextEditingController,
@@ -238,7 +229,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     },
                     errorText: passwordError,
                   ),
-                  buildInputField(
+                  joinTextfeildMethod.buildInputField(
                     title: '비밀번호확인',
                     hintText: '비밀번호를 다시 입력해 주세요',
                     textEditingController: password2TextEditingController,
@@ -259,7 +250,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     },
                     errorText: passwordCheckError,
                   ),
-                  buildInputField(
+                  joinTextfeildMethod.buildInputField(
                     title: '전화번호',
                     hintText: '000-0000-0000',
                     textEditingController: phoneTextEditingController,
@@ -313,8 +304,6 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                                         localTextEditingController.text =
                                             "주소를 가져오지 못했습니다.";
                                       }
-
-                                      print(localCode);
                                     });
                                   },
                                   child: Icon(Icons.gps_fixed)),
@@ -408,63 +397,6 @@ class _JoinPageState extends ConsumerState<JoinPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget buildInputField({
-    required String title,
-    required String hintText,
-    required TextEditingController textEditingController,
-    bool obscureText = false,
-    TextInputType keyboardType = TextInputType.text,
-    List<TextInputFormatter>? inputFormatters,
-    Function(String)? onChanged,
-    String? errorText,
-  }) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: TextStyle(fontSize: 16),
-          ),
-          SizedBox(height: 10),
-          TextField(
-            maxLines: 1,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            inputFormatters: inputFormatters,
-            controller: textEditingController,
-            onChanged: onChanged,
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 11,
-                vertical: 11,
-              ),
-              hintText: hintText,
-              hintStyle: const TextStyle(
-                color: Colors.grey,
-                fontSize: 14,
-              ),
-              errorText: errorText,
-              errorBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey),
-              ),
-              disabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
