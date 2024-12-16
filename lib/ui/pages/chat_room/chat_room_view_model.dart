@@ -9,14 +9,19 @@ class ChatRoomViewModel extends Notifier<List<Chat>?> {
     return [];
   }
 
+  final chatRepo = ChatRepository();
+
   Future<List<Chat>?> getChatList(String chatRoomId) async {
-    final chatRepo = ChatRepository();
     final result = await chatRepo.getChatList(chatRoomId);
     state = result;
   }
 
   void fetch() {
     getChatList('28260122');
+  }
+
+  Future<void> sendChat(Chat chat) async {
+    await chatRepo.sendMessage(chat);
   }
 }
 

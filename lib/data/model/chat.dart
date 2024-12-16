@@ -1,4 +1,5 @@
 class Chat {
+  String chatRoomId;
   String userId;
   String userImage;
   String nickname;
@@ -6,6 +7,7 @@ class Chat {
   DateTime timeStamp;
 
   Chat({
+    required this.chatRoomId,
     required this.userId,
     required this.userImage,
     required this.nickname,
@@ -15,6 +17,7 @@ class Chat {
 
   Chat.fromJson(Map<String, dynamic> map)
       : this(
+          chatRoomId: map['chatRoomId'],
           userId: map['userId'],
           userImage: map['userImage'],
           nickname: map['nickname'],
@@ -24,6 +27,7 @@ class Chat {
 
   Map<String, dynamic> toJson() {
     return {
+      'chatRoomId': chatRoomId,
       'userId': userId,
       'userImage': userImage,
       'nickname': nickname,
@@ -34,6 +38,6 @@ class Chat {
 
   @override
   String toString() {
-    return 'userId: $userId, userImage: $userImage, nickname: $nickname, message: $message, timeStamp: $timeStamp';
+    return 'chatRoomId: $chatRoomId, userId: $userId, userImage: $userImage, nickname: $nickname, message: $message, timeStamp: $timeStamp';
   }
 }
