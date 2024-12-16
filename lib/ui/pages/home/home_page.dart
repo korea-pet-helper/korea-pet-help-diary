@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
             MaterialPageRoute(
               builder: (context) {
                 return ChatRoomPage(
-                  chatRoomId: preview.chatRoomId,
+                  preview: preview,
                   user: user,
                 );
               },

@@ -34,14 +34,21 @@ class ChatRepository {
   }
 
   /// 메시지 보내기
-  Future<void> sendMessage(Chat chat) async {
+  Future<void> sendMessage(Chat chat, String local) async {
     try {
       final firestore = FirebaseFirestore.instance;
 
       final docRef = firestore.collection('Chats').doc(chat.chatRoomId);
 
       await docRef.update({
-        'message': FieldValue.arrayUnion([chat.toJson()])
+        'message': FieldValue.arrayUnion([chat.toJson()]),
+        'recentMessage': {
+          'chatRoomId': chat.chatRoomId,
+          'local': local,
+          'message': chat.message,
+          'thumbnail': chat.userImage,
+          'timeStamp': chat.timeStamp.toIso8601String(),
+        }
       }).then(
         (value) => chat.toJson(),
       );

@@ -20,8 +20,8 @@ class ChatRoomViewModel extends Notifier<List<Chat>?> {
     getChatList('28260122');
   }
 
-  Future<void> sendChat(Chat chat) async {
-    await chatRepo.sendMessage(chat);
+  Future<void> sendChat(Chat chat, String local) async {
+    await chatRepo.sendMessage(chat, local);
   }
 
   Stream<List<Chat>?> snapshotChatList(String chatRoomId) {
