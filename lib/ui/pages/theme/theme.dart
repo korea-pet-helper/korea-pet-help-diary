@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 final ThemeData appTheme = ThemeData(
+  colorSchemeSeed: Colors.blue,
   appBarTheme: appBarTheme,
   inputDecorationTheme: InputDecorationTheme(
     contentPadding: const EdgeInsets.symmetric(horizontal: 11, vertical: 11),
