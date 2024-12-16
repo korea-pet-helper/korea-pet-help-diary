@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:korea_pet_help_diary/data/model/chat.dart';
+import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
 class ChatRoomSend extends StatelessWidget {
-  String message;
-  ChatRoomSend({required this.message});
+  Chat chat;
+  ChatRoomSend({required this.chat});
 
   @override
   Widget build(BuildContext context) {
+    double maxWidth = MediaQuery.of(context).size.width - 180;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: Row(
@@ -14,7 +18,7 @@ class ChatRoomSend extends StatelessWidget {
         children: [
           // 시간
           Text(
-            '1분전',
+            DateTimeFormat.formatChatTime(chat.timeStamp),
             style: TextStyle(
               color: Colors.grey,
             ),
@@ -22,9 +26,7 @@ class ChatRoomSend extends StatelessWidget {
           const SizedBox(width: 5),
           // 메시지
           Container(
-            // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
-            height: 80,
-            width: 280,
+            constraints: BoxConstraints(maxWidth: maxWidth),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),
@@ -32,7 +34,7 @@ class ChatRoomSend extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Text(
               softWrap: true,
-              message,
+              chat.message,
               style: TextStyle(
                 fontSize: 18,
               ),

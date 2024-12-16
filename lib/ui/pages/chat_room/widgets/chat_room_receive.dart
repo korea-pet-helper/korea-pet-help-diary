@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:korea_pet_help_diary/data/model/chat.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
+import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
 class ChatRoomReceive extends StatelessWidget {
   // true: 프로필 보이기 false: 프로필 안보이기
   bool showProfile;
-  String message;
-  ChatRoomReceive({required this.showProfile, required this.message});
+  Chat chat;
+  ChatRoomReceive({required this.showProfile, required this.chat});
 
   @override
   Widget build(BuildContext context) {
+    // 메시지 박스의 최대 넓이
+    double maxWidth = MediaQuery.of(context).size.width - 130;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: Column(
@@ -22,9 +27,9 @@ class ChatRoomReceive extends StatelessWidget {
               const SizedBox(width: 50, height: 50),
               // 메시지 내용
               Container(
-                // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
-                height: 80,
-                width: 280,
+                // 자식 위젯 크기에 맞춰 Container 사이즈가 자동으로 바뀜
+                // Container 넓이의 최대를 지정
+                constraints: BoxConstraints(maxWidth: maxWidth),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
@@ -32,7 +37,7 @@ class ChatRoomReceive extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   softWrap: true,
-                  message,
+                  chat.message,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -41,7 +46,7 @@ class ChatRoomReceive extends StatelessWidget {
               const SizedBox(width: 5),
               // 시간
               Text(
-                '10분전',
+                DateTimeFormat.formatChatTime(chat.timeStamp),
                 style: TextStyle(
                   color: Colors.grey,
                 ),
@@ -61,11 +66,11 @@ class ChatRoomReceive extends StatelessWidget {
           // 프로필 사진
           UserProfileImage(
             size: 50,
-            imageUrl: 'https://picsum.photos/200/300',
+            imageUrl: chat.userImage,
           ),
           const SizedBox(width: 10),
           // 닉네임
-          Text('닉네임', style: TextStyle(fontSize: 16)),
+          Text(chat.nickname, style: TextStyle(fontSize: 16)),
         ],
       ),
     );
