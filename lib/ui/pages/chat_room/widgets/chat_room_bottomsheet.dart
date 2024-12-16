@@ -42,20 +42,23 @@ class ChatRoomBottomsheet extends StatelessWidget {
             const SizedBox(width: 10),
             GestureDetector(
               onTap: () {
-                // TODO: user 정보 받아오기
-                Chat chat = Chat(
-                    chatRoomId: '28260122',
-                    message: controller.text,
-                    nickname: '인천전봇대',
-                    userId: 'test2',
-                    timeStamp: DateTime.now(),
-                    userImage: 'https://picsum.photos/200/300');
+                // 아무것도 없는 내용 보내지 않도록 하기
+                if (controller.text.trim().isNotEmpty) {
+                  // TODO: user 정보 받아오기
+                  Chat chat = Chat(
+                      chatRoomId: '28260122',
+                      message: controller.text,
+                      nickname: '인천전봇대',
+                      userId: 'test2',
+                      timeStamp: DateTime.now(),
+                      userImage: 'https://picsum.photos/200/300');
 
-                // 메시지 전달
-                vm.sendChat(chat);
+                  // 메시지 전달
+                  vm.sendChat(chat);
 
-                // 메시지 보내고 controller 에서 지우기
-                controller.text = '';
+                  // 메시지 보내고 controller 에서 지우기
+                  controller.text = '';
+                }
               },
               // 보내는 아이콘
               child: Container(
