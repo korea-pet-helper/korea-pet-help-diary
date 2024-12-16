@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/data/model/chat.dart';
-import 'package:korea_pet_help_diary/data/repository/chat_repository.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_view_model.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_bottomsheet.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_receive.dart';
@@ -9,21 +9,14 @@ import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_send.d
 
 class ChatRoomPage extends ConsumerStatefulWidget {
   String chatRoomId;
-  ChatRoomPage({required this.chatRoomId});
+  User user;
+  ChatRoomPage({required this.chatRoomId, required this.user});
 
   @override
   ConsumerState<ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
 class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
-  List<String> messages = [
-    '안녕하세요 처음 뵙겠습니다!안녕하세요 처음 뵙겠습니다!',
-    '강아지 키우고 있습니다',
-    '네 안녕하세요!',
-    '강아지가 너무 귀여워요',
-    '감사합니다.',
-  ];
-
   final controller = TextEditingController();
 
   @override
