@@ -53,18 +53,21 @@ class ChatRoomReceive extends StatelessWidget {
     );
   }
 
-  Row reciverProfile() {
-    return Row(
-      children: [
-        // 프로필 사진
-        UserProfileImage(
-          size: 50,
-          imageUrl: 'https://picsum.photos/200/300',
-        ),
-        const SizedBox(width: 10),
-        // 닉네임
-        Text('닉네임', style: TextStyle(fontSize: 16)),
-      ],
+  Widget reciverProfile() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0),
+      child: Row(
+        children: [
+          // 프로필 사진
+          UserProfileImage(
+            size: 50,
+            imageUrl: 'https://picsum.photos/200/300',
+          ),
+          const SizedBox(width: 10),
+          // 닉네임
+          Text('닉네임', style: TextStyle(fontSize: 16)),
+        ],
+      ),
     );
   }
 }

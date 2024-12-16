@@ -13,6 +13,7 @@ final ThemeData appTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: elevatedButtonStyle,
   ),
+  bottomSheetTheme: bottomSheetStyle,
 );
 
 // appBarTheme: 모든 AppBar에 기본적으로 적용될 스타일 정의
