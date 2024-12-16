@@ -18,10 +18,10 @@ Future<void> saveUserData(User user) async {
     "password": user.password,
     "phone": user.phone,
     "pet": {
-      "petName": user.pat.petName,
-      "petAge": user.pat.petAge,
-      "petDogCat": user.pat.petDogCat,
-      "petInformation": user.pat.petInformation,
+      "petName": user.pet.petName,
+      "petAge": user.pet.petAge,
+      "petDogCat": user.pet.petDogCat,
+      "petInformation": user.pet.petInformation,
     }
   };
 

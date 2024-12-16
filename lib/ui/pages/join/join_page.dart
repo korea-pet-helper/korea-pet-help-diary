@@ -344,7 +344,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                                         .trim(),
                                     phone:
                                         phoneTextEditingController.text.trim(),
-                                    pat: Pat(
+                                    pet: Pet(
                                       petAge: 0,
                                       petName: '',
                                       petDogCat: '',

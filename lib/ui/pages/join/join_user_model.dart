@@ -7,7 +7,7 @@ class User {
     required this.nickname,
     required this.password,
     required this.phone,
-    required this.pat, // Pat 객체
+    required this.pet, // Pet 객체
   });
 
   String userId;
@@ -17,7 +17,7 @@ class User {
   String nickname;
   String password;
   String phone;
-  Pat pat;
+  Pet pet;
 
   // Firestore에 저장하기 위한 Map 변환 메서드
   Map<String, dynamic> toMap() {
@@ -29,13 +29,13 @@ class User {
       'nickname': nickname,
       'password': password,
       'phone': phone,
-      'pat': pat.toMap(), // Pat 객체를 Map으로 변환
+      'pet': pet.toMap() // Pet 객체를 Map으로 변환
     };
   }
 }
 
-class Pat {
-  Pat({
+class Pet {
+  Pet({
     this.petName = '',
     this.petAge = 0,
     this.petDogCat = '',
