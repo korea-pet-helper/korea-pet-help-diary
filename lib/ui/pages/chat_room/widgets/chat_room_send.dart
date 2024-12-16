@@ -8,6 +8,8 @@ class ChatRoomSend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double maxWidth = MediaQuery.of(context).size.width - 180;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: Row(
@@ -24,9 +26,7 @@ class ChatRoomSend extends StatelessWidget {
           const SizedBox(width: 5),
           // 메시지
           Container(
-            // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
-            height: 80,
-            width: 280,
+            constraints: BoxConstraints(maxWidth: maxWidth),
             decoration: BoxDecoration(
               border: Border.all(color: Colors.grey),
               borderRadius: BorderRadius.circular(8),

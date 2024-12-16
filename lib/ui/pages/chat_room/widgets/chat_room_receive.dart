@@ -11,6 +11,9 @@ class ChatRoomReceive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 메시지 박스의 최대 넓이
+    double maxWidth = MediaQuery.of(context).size.width - 130;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
       child: Column(
@@ -24,9 +27,9 @@ class ChatRoomReceive extends StatelessWidget {
               const SizedBox(width: 50, height: 50),
               // 메시지 내용
               Container(
-                // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
-                height: 80,
-                width: 280,
+                // 자식 위젯 크기에 맞춰 Container 사이즈가 자동으로 바뀜
+                // Container 넓이의 최대를 지정
+                constraints: BoxConstraints(maxWidth: maxWidth),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8),
@@ -73,3 +76,21 @@ class ChatRoomReceive extends StatelessWidget {
     );
   }
 }
+
+// Container(
+//                 // TODO: 메시지 길이에 따라 container 사이즈 조절 필요
+//                 height: 80,
+//                 width: 280,
+//                 decoration: BoxDecoration(
+//                   border: Border.all(color: Colors.grey),
+//                   borderRadius: BorderRadius.circular(8),
+//                 ),
+//                 padding: const EdgeInsets.all(8),
+//                 child: Text(
+//                   softWrap: true,
+//                   chat.message,
+//                   style: TextStyle(
+//                     fontSize: 18,
+//                   ),
+//                 ),
+//               ),
