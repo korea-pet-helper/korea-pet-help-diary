@@ -6,7 +6,7 @@ class DateTimeFormat {
 
     final dif = now.difference(dateTime);
 
-    if (dif.inMinutes < 10) {
+    if (dif.inSeconds < 10) {
       return '방금 전';
     } else if (dif.inMinutes < 60) {
       return '${dif.inMinutes}분 전';
@@ -15,5 +15,9 @@ class DateTimeFormat {
     } else {
       return DateFormat('M월 d일').format(dateTime);
     }
+  }
+
+  static String formatChatTime(DateTime dateTime) {
+    return DateFormat('HH:mm').format(dateTime);
   }
 }

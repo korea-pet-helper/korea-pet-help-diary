@@ -47,7 +47,7 @@ class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
           title: Text('용현동'),
         ),
         body: StreamBuilder<List<Chat>?>(
-          stream: vm.snapshotChatList('28260121'),
+          stream: vm.snapshotChatList('28260122'),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               // 데이터가 없을 때
@@ -78,18 +78,15 @@ class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
                   // 상대방
                   // TODO: 상대방과 나 구분짓는 코드 필요
                   if (index == 0) {
-                    return ChatRoomReceive(
-                        showProfile: true, message: chat.message);
+                    return ChatRoomReceive(showProfile: true, chat: chat);
                   } else if (index == 1) {
-                    return ChatRoomReceive(
-                        showProfile: false, message: chat.message);
+                    return ChatRoomReceive(showProfile: false, chat: chat);
                   } else if (index == 4) {
-                    return ChatRoomReceive(
-                        showProfile: true, message: chat.message);
+                    return ChatRoomReceive(showProfile: true, chat: chat);
                   }
 
                   // 나
-                  return ChatRoomSend(message: chat.message);
+                  return ChatRoomSend(chat: chat);
                 },
               );
             }

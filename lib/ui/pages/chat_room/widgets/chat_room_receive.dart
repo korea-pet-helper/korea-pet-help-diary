@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:korea_pet_help_diary/data/model/chat.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
+import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
 class ChatRoomReceive extends StatelessWidget {
   // true: 프로필 보이기 false: 프로필 안보이기
   bool showProfile;
-  String message;
-  ChatRoomReceive({required this.showProfile, required this.message});
+  Chat chat;
+  ChatRoomReceive({required this.showProfile, required this.chat});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class ChatRoomReceive extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Text(
                   softWrap: true,
-                  message,
+                  chat.message,
                   style: TextStyle(
                     fontSize: 18,
                   ),
@@ -41,7 +43,7 @@ class ChatRoomReceive extends StatelessWidget {
               const SizedBox(width: 5),
               // 시간
               Text(
-                '10분전',
+                DateTimeFormat.formatChatTime(chat.timeStamp),
                 style: TextStyle(
                   color: Colors.grey,
                 ),
@@ -61,11 +63,11 @@ class ChatRoomReceive extends StatelessWidget {
           // 프로필 사진
           UserProfileImage(
             size: 50,
-            imageUrl: 'https://picsum.photos/200/300',
+            imageUrl: chat.userImage,
           ),
           const SizedBox(width: 10),
           // 닉네임
-          Text('닉네임', style: TextStyle(fontSize: 16)),
+          Text(chat.nickname, style: TextStyle(fontSize: 16)),
         ],
       ),
     );
