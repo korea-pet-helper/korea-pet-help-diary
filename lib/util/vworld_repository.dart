@@ -6,7 +6,7 @@ class VworldRepository {
     validateStatus: (status) => true,
   ));
 
-  //gps 좌표로 행정구역 가져오기
+  //gps 좌표로 행정구역 및 로컬코드드 가져오기
   Future<List<Map<String, String>>> findByLatLng({
     required double lat,
     required double lng,
@@ -27,8 +27,8 @@ class VworldRepository {
       return List.of(response.data['response']['result']['featureCollection']
               ['features'])
           .map((e) => {
-                'full_nm': e['properties']['full_nm'].toString(),
-                'emd_cd': e['properties']['emd_cd'].toString(),
+                'full_nm': e['properties']['full_nm'].toString(), //행정구역명
+                'emd_cd': e['properties']['emd_cd'].toString(), //로컬코드
               })
           .toList();
     }
