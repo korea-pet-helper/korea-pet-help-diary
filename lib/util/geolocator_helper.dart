@@ -1,5 +1,5 @@
 import 'package:geolocator/geolocator.dart';
-import 'vworld_repository.dart';
+import 'package:korea_pet_help_diary/data/repository/vworld_repository.dart';
 
 class GeolocatorHelper {
   static bool isDenied(LocationPermission permission) {
