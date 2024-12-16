@@ -103,7 +103,8 @@ class _LoginPageState extends State<LoginPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()),
+                                  builder: (context) =>
+                                      HomePage(localCode: '1111111')), //임시
                             );
                           } else {
                             showCustomSnackBar(context, '로그인 실패');

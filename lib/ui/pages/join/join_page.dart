@@ -8,6 +8,7 @@ import 'package:korea_pet_help_diary/ui/pages/join/geolocator_helper.dart';
 import 'package:path/path.dart' as path;
 import 'firebase_user_creat.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class JoinPage extends ConsumerStatefulWidget {
   @override
@@ -26,6 +27,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
   //정상 작성여부 확인
   bool imagePass = false;
   bool idPass = false;
+  bool idCheckPass = false;
   bool namePass = false;
   bool passwordPass = false;
   bool passwprd2Pass = false;
@@ -148,6 +150,55 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                     },
                     errorText: idError,
                   ),
+                  // Firestore 패키지 임포트
+                  GestureDetector(
+                    onTap: () async {
+                      if (idTextEditingController.text.length >= 5) {
+                        String userId =
+                            idTextEditingController.text.trim(); // 입력된 아이디 가져오기
+
+                        if (userId.isEmpty) {
+                          // 아이디가 비어있을 경우 에러 처리
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text('아이디를 입력해주세요.'),
+                          ));
+                          return;
+                        }
+
+                        // Firestore에서 해당 아이디 문서 조회
+                        DocumentSnapshot userDoc = await FirebaseFirestore
+                            .instance
+                            .collection('Users')
+                            .doc(userId)
+                            .get();
+
+                        setState(() {
+                          if (userDoc.exists) {
+                            //문서 존재여부 확인_false : 없음
+                            // 이미 해당 아이디가 존재할 경우
+                            idError = '이미 사용 중인 아이디입니다.';
+                            idCheckPass = false;
+                          } else {
+                            // 해당 아이디를 사용할 수 있는 경우
+                            idError = '사용 가능한 아이디입니다.';
+                            idCheckPass = true;
+                          }
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: 40,
+                      width: 120,
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Text(
+                          '아이디 중복 체크',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   buildInputField(
                     title: '이름',
                     hintText: '이름을 입력해 주세요',
