@@ -21,6 +21,18 @@ class User {
     required this.pet, // Pet 객체
   });
 
+  User.fromJson(Map<String, dynamic> map)
+      : this(
+          userId: map['id'],
+          image: map['image'],
+          local: map['local'],
+          localCode: map['localCode'],
+          nickname: map['nickname'],
+          password: map['password'],
+          phone: map['phone'],
+          pet: Pet.fromJson(map['pet']),
+        );
+
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,

@@ -10,24 +10,8 @@ class UserRepository {
     // Firestore 인스턴스
     final firestore = FirebaseFirestore.instance;
 
-    // 저장할 데이터 (userId 제외)
-    final userData = {
-      "image": user.image,
-      "local": user.local,
-      "localCode": user.localCode,
-      "nickname": user.nickname,
-      "password": user.password,
-      "phone": user.phone,
-      "pet": {
-        "petName": user.pet.petName,
-        "petAge": user.pet.petAge,
-        "petDogCat": user.pet.petDogCat,
-        "petInformation": user.pet.petInformation,
-      }
-    };
-
     // Firestore의 Users 컬렉션에 문서 추가 (userId를 문서 이름으로 사용)
-    await firestore.collection("Users").doc(user.userId).set(userData);
+    await firestore.collection("Users").doc(user.userId).set(user.toMap());
   }
 
   // Firebase Storage에 이미지 업로드
