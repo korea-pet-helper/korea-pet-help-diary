@@ -2,46 +2,64 @@ import 'package:geolocator/geolocator.dart';
 import 'vworld_repository.dart';
 
 class GeolocatorHelper {
-  static bool _isDenied(LocationPermission permission) {
+  static bool isDenied(LocationPermission permission) {
     return permission == LocationPermission.denied ||
         permission == LocationPermission.deniedForever;
   }
 
-  static Future<Map<String, dynamic>?> getAdministrativeArea() async {
-    // 위치 권한 확인 및 요청
+  // 위치 권한 확인
+  static Future<LocationPermission> checkPermission() async {
     final permission = await Geolocator.checkPermission();
-    if (_isDenied(permission)) {
+    if (isDenied(permission)) {
       final request = await Geolocator.requestPermission();
-      if (_isDenied(request)) {
-        return null; // 권한이 없으면 null 반환
-      }
+      return request;
     }
+    return permission;
+  }
 
+  // 현재 위치 가져오기
+  static Future<Position?> getCurrentPosition() async {
     try {
-      // 현재 위치 가져오기
-      Position position = await Geolocator.getCurrentPosition(
+      return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
       );
+    } catch (e) {
+      print("Error in getting current position: $e");
+      return null;
+    }
+  }
 
-      // VWorldRepository 인스턴스 생성
-      final vworldRepository = VworldRepository();
-
-      // 좌표를 이용해 행정구역 데이터 가져오기
-      final areas = await vworldRepository.findByLatLng(
-        lat: position.latitude,
-        lng: position.longitude,
-      );
-
-      // 가장 첫 번째 full_nm과 emd_cd 반환
+  // VWorldRepository를 통해 행정구역 데이터 가져오기
+  static Future<Map<String, dynamic>?> getAreaFromCoordinates(
+      double lat, double lng) async {
+    final vworldRepository = VworldRepository();
+    try {
+      final areas = await vworldRepository.findByLatLng(lat: lat, lng: lng);
       if (areas.isNotEmpty) {
         final area = areas.first;
         return {'name': area['full_nm'], 'code': area['emd_cd']};
       }
-
-      return null; // 리스트가 비어있다면 null 반환
     } catch (e) {
-      print("getAdministrativeArea 함수 위치: $e");
-      return null; // 에러 발생 시 null 반환
+      print("Error in fetching area data: $e");
     }
+    return null;
+  }
+
+  // 행정구역 정보 가져오기
+  static Future<Map<String, dynamic>?> getAdministrativeArea() async {
+    // 위치 권한 확인 및 요청
+    final permission = await checkPermission();
+    if (isDenied(permission)) {
+      return null; // 권한이 없으면 null 반환
+    }
+
+    // 현재 위치 가져오기
+    final position = await getCurrentPosition();
+    if (position == null) {
+      return null; // 위치 정보가 없으면 null 반환
+    }
+
+    // 좌표를 이용해 행정구역 데이터 가져오기
+    return await getAreaFromCoordinates(position.latitude, position.longitude);
   }
 }

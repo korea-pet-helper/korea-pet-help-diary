@@ -13,7 +13,7 @@ class JoinImagePickerUi {
         image: selectedImage != null
             ? DecorationImage(
                 image: FileImage(
-                  File(selectedImage!.path),
+                  File(selectedImage.path),
                 ),
                 fit: BoxFit.cover,
               )

@@ -4,11 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:korea_pet_help_diary/ui/pages/join/join_user_model.dart';
 import 'package:korea_pet_help_diary/util/geolocator_helper.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_image_picker_ui.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_textfeild_method.dart';
 import 'package:path/path.dart' as path;
-import 'firebase_user_creat.dart';
+import 'repository/user_firebase_repository.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -57,27 +58,6 @@ class _JoinPageState extends ConsumerState<JoinPage> {
     phoneTextEditingController.dispose();
     localTextEditingController.dispose();
     super.dispose();
-  }
-
-  // Firebase Storage에 이미지 업로드
-  Future<String> _uploadImageToFirebase(XFile image) async {
-    try {
-      // 파일명 생성
-      String fileName = path.basename(image.path);
-
-      // Firebase Storage 경로 지정 및 업로드
-      Reference storageRef =
-          FirebaseStorage.instance.ref().child('users/$fileName');
-      UploadTask uploadTask = storageRef.putFile(File(image.path));
-
-      // 업로드 완료 후 URL 가져오기
-      TaskSnapshot snapshot = await uploadTask;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-
-      return downloadUrl;
-    } catch (e) {
-      throw Exception('이미지 업로드 실패: $e');
-    }
   }
 
   @override
@@ -348,25 +328,31 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                           ? () async {
                               // Firebase Storage에 이미지 업로드
                               String url =
-                                  await _uploadImageToFirebase(selectedImage!);
+                                  await uploadImageToFirebase(selectedImage!);
                               setState(() {
                                 uploadedImageUrl = url; // 업로드된 URL 저장
                               });
                               try {
                                 await saveUserData(
-                                  userId: idTextEditingController.text.trim(),
-                                  image: url, // 이미지 경로
-                                  local: localTextEditingController.text.trim(),
-                                  localCode: localCode,
-                                  nickname:
-                                      nameTextEditingController.text.trim(),
-                                  password:
-                                      passwordTextEditingController.text.trim(),
-                                  phone: phoneTextEditingController.text.trim(),
-                                  petName: '',
-                                  petAge: 0,
-                                  petDogCat: '',
-                                  petInformation: '',
+                                  User(
+                                    userId: idTextEditingController.text.trim(),
+                                    image: url, // 이미지 경로
+                                    local:
+                                        localTextEditingController.text.trim(),
+                                    localCode: localCode,
+                                    nickname:
+                                        nameTextEditingController.text.trim(),
+                                    password: passwordTextEditingController.text
+                                        .trim(),
+                                    phone:
+                                        phoneTextEditingController.text.trim(),
+                                    pat: Pat(
+                                      petAge: 0,
+                                      petName: '',
+                                      petDogCat: '',
+                                      petInformation: '',
+                                    ),
+                                  ),
                                 );
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(SnackBar(
