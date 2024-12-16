@@ -20,7 +20,7 @@ class JoinImagePickerUi {
             : null,
       ),
       child: selectedImage == null
-          ? Icon(Icons.camera_alt, color: Colors.grey)
+          ? const Icon(Icons.camera_alt, color: Colors.grey)
           : null,
     );
   }

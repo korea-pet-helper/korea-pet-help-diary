@@ -1,14 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/join_user_model.dart';
 import 'package:korea_pet_help_diary/util/geolocator_helper.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_image_picker_ui.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_textfeild_method.dart';
-import 'package:path/path.dart' as path;
 import 'repository/user_firebase_repository.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -67,7 +64,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
     JoinImagePickerUi joinImagePickerUi = JoinImagePickerUi();
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           '회원가입',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
@@ -80,12 +77,12 @@ class _JoinPageState extends ConsumerState<JoinPage> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SizedBox(
                 height: 1200,
                 child: Column(
                   children: [
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () async {
                         ImagePicker imagePicker = ImagePicker();
@@ -101,7 +98,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                       },
                       child: joinImagePickerUi.imagePickerUi(selectedImage),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     joinTextfeildMethod.buildInputField(
                       title: '아이디',
                       hintText: '아이디를 입력해 주세요',
@@ -129,7 +126,8 @@ class _JoinPageState extends ConsumerState<JoinPage> {
 
                           if (userId.isEmpty) {
                             // 아이디가 비어있을 경우 에러 처리
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
                               content: Text('아이디를 입력해주세요.'),
                             ));
                             return;
@@ -163,7 +161,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                         decoration: BoxDecoration(
                             color: Colors.grey[300],
                             borderRadius: BorderRadius.circular(10)),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '아이디 중복 체크',
                             style: TextStyle(fontSize: 14),
@@ -253,13 +251,13 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                       errorText: phoneError,
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 10),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text(
+                              const Text(
                                 '주소',
                                 style: TextStyle(fontSize: 16),
                               ),
@@ -287,11 +285,11 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                                         }
                                       });
                                     },
-                                    child: Icon(Icons.gps_fixed)),
+                                    child: const Icon(Icons.gps_fixed)),
                               )
                             ],
                           ),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           TextField(
                             controller: localTextEditingController,
                             maxLines: 1,
@@ -316,7 +314,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: imagePass &&
                               idPass &&
@@ -355,7 +353,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                                   ),
                                 );
                                 ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
+                                    .showSnackBar(const SnackBar(
                                   content: Text('회원가입이 완료되었습니다! 로그인 해주세요.'),
                                 ));
                                 Navigator.pop(context);
@@ -367,7 +365,7 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                               }
                             }
                           : null,
-                      child: Text(
+                      child: const Text(
                         '가입하기',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
