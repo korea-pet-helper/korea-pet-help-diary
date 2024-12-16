@@ -38,9 +38,15 @@ class _LoginPageState extends State<LoginPage> {
         // 유저 문서가 존재하고 비밀번호가 일치하는지 확인
         if (userDoc.exists && userDoc['password'] == passwordController.text) {
           showCustomSnackBar(context, '로그인 성공');
+
+          // 로컬코드 가져오기
+          String localCode = userDoc['localCode'];
+
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(
+              builder: (context) => HomePage(localCode: localCode),
+            ),
           );
         } else {
           showCustomSnackBar(context, '아이디 또는 비밀번호가 잘못되었습니다.');
@@ -83,8 +89,8 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               Image.asset(
                 'assets/images/welcome.png',
-                height: 250,
-                width: 250,
+                height: 150,
+                width: 150,
               ),
               const SizedBox(height: 20),
               TextFormField(
