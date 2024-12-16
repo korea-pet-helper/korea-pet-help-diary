@@ -49,4 +49,28 @@ class ChatRepository {
       print('sendMessage => $e');
     }
   }
+
+  /// 실시간으로 데이터 가져오기
+  Stream<List<Chat>?> snapshotChatList(String chatRoomId) {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      final doc = firestore.collection('Chats').doc(chatRoomId);
+
+      return doc.snapshots().map((snapshot) {
+        List<Chat> result = [];
+
+        final messages = List.from(snapshot.data()!['message']);
+
+        for (var message in messages) {
+          result.add(Chat.fromJson(message));
+        }
+
+        return result;
+      });
+    } catch (e) {
+      print('getRealTimeChatList $e');
+      return const Stream.empty();
+    }
+  }
 }
