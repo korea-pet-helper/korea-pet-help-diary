@@ -39,12 +39,10 @@ class _LoginPageState extends State<LoginPage> {
             .get();
         // 유저 문서가 존재하고 비밀번호가 일치하는지 확인
         if (userDoc.exists && userDoc['password'] == passwordController.text) {
+          // 유저 정보 객체 생성
           User user = User.fromJson(userDoc.data()!);
 
           showCustomSnackBar(context, '로그인 성공');
-
-          // 로컬코드 가져오기
-          String localCode = userDoc['localCode'];
 
           // 홈 페이지로 이동하면서 로컬코드 전달
           Navigator.push(

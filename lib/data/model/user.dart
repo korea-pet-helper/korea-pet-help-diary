@@ -23,7 +23,7 @@ class User {
 
   User.fromJson(Map<String, dynamic> map)
       : this(
-          userId: map['id'],
+          userId: map['userId'],
           image: map['image'],
           local: map['local'],
           localCode: map['localCode'],
