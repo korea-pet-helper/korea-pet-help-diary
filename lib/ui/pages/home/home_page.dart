@@ -14,7 +14,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final state = ref.watch(homeViewModelProvider(user.localCode));
+      final state = ref.watch(homeViewModelProvider(user));
+      final vm = ref.watch(homeViewModelProvider(user).notifier);
       return Scaffold(
         appBar: AppBar(
           title: Text(user.local),
@@ -35,11 +36,48 @@ class HomePage extends StatelessWidget {
           ],
         ),
         // 채팅방 리스트
-        body: ListView.builder(
-          itemCount: state.length,
-          itemBuilder: (context, index) {
-            return item(state[index]!);
-          },
+        body: state.chatPreviewList?.isEmpty ?? true
+            ? const Center(
+                child: Text(
+                  '참여했던 채팅방이 없습니다.\n지금 바로 지역 채팅방으로 이동하세요!',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+            : ListView.builder(
+                itemCount: state.chatPreviewList!.length,
+                itemBuilder: (context, index) {
+                  return item(state.chatPreviewList![index]);
+                },
+              ),
+        floatingActionButton: SizedBox(
+          width: 200,
+          child: ElevatedButton(
+            onPressed: () async {
+              final chatPreview = await vm.getMyChatPreview(user.localCode);
+              // 채팅방으로 이동
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return ChatRoomPage(
+                      preview: chatPreview!,
+                      user: user,
+                    );
+                  },
+                ),
+              );
+            },
+            child: const Text(
+              '지역 채팅방으로 이동',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
       );
     });

@@ -8,6 +8,7 @@ class User {
   String nickname;
   String password;
   String phone;
+  List<String> chatRoomIds;
   Pet pet;
 
   User({
@@ -18,6 +19,7 @@ class User {
     required this.nickname,
     required this.password,
     required this.phone,
+    required this.chatRoomIds,
     required this.pet, // Pet 객체
   });
 
@@ -30,6 +32,7 @@ class User {
           nickname: map['nickname'],
           password: map['password'],
           phone: map['phone'],
+          chatRoomIds: List.from(map['chatRoomIds']),
           pet: Pet.fromJson(map['pet']),
         );
 
@@ -42,6 +45,7 @@ class User {
       'nickname': nickname,
       'password': password,
       'phone': phone,
+      'chatRoomIds': chatRoomIds,
       'pet': pet.toMap(),
     };
   }
