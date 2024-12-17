@@ -68,7 +68,6 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
       );
     }
 
-    bool tapState;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -117,16 +116,25 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ToggleButtons(
+                          color: Colors.black.withOpacity(0.6),
+                          selectedColor: Colors.white,
+                          fillColor: Colors.black,
+                          splashColor: Colors.black,
+                          borderRadius: BorderRadius.circular(8.0),
                           isSelected: isSelected,
                           onPressed:toggleSelect,
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal:16),
-                              child: Text("개", style: TextStyle(fontSize: 12)),
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal:10),
+                              child: const SizedBox(
+                                height:double.infinity,
+                                child: Text("개", style: TextStyle(fontSize: 12)),),
                             ),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              child: Text("고양이", style: TextStyle(fontSize: 12)),
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal:10),
+                              child: const SizedBox(
+                                height:double.infinity,
+                                child: Text("고양이", style: TextStyle(fontSize: 12)),),
                             ),
                           ],
                         ),
@@ -164,7 +172,6 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                     GestureDetector(
                       
                       onTap: () {
-                        tapState = true;  
                       },
                       child: SizedBox(
                         height: 50,
@@ -183,7 +190,7 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                           ],
                         ),
                       ),
-                    );
+                    ),
                     // TextFormField(
                     //   controller: myNeighborController,
                     //   textInputAction: TextInputAction.done,
@@ -195,9 +202,9 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                     //     return null;
                     //   },
                       //adding the icon to the right
-                    ),
+                    
                   ],
-                ),
+                  ),
               ),
               //empty gap
               const SizedBox(
@@ -222,7 +229,7 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                       Navigator.push(context, MaterialPageRoute(builder: (context){
                         return HomePage(user: '');//this needs to be filled
                       }));
-                    },
+                    };
                     }
                   }
                 child: const Text("수정하기"),
