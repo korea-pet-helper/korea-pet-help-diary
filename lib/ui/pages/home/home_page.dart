@@ -5,6 +5,7 @@ import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/home/home_view_model.dart';
 import 'package:korea_pet_help_diary/ui/pages/profile_fix/profile_fix_page.dart';
+import 'package:korea_pet_help_diary/ui/user_global_view_model.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
@@ -15,8 +16,14 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
+      final userState = ref.watch(userGlobalViewModelProvider(user.userId));
+      final userVm =
+          ref.watch(userGlobalViewModelProvider(user.userId).notifier);
+
+      user = userState ?? user;
       final state = ref.watch(homeViewModelProvider(user));
       final vm = ref.watch(homeViewModelProvider(user).notifier);
+
       return Scaffold(
         appBar: AppBar(
           title: Text(user.local),
@@ -30,7 +37,10 @@ class HomePage extends StatelessWidget {
                       return ProfileFixPage(user);
                     },
                   ),
-                ).then((value) => vm.fetchChatPreivew());
+                ).then((value) {
+                  vm.fetchChatPreivew();
+                  userVm.fetchUserInfo();
+                });
               },
               // 내 프로필 페이지로 이동할 아이콘
               child: Container(
@@ -63,7 +73,7 @@ class HomePage extends StatelessWidget {
           width: 200,
           child: ElevatedButton(
             onPressed: () async {
-              final chatPreview = await vm.getMyChatPreview(user);
+              final chatPreview = await vm.getMyChatPreview(userState!);
               // 채팅방으로 이동
               Navigator.push(
                 context,
@@ -75,7 +85,10 @@ class HomePage extends StatelessWidget {
                     );
                   },
                 ),
-              ).then((value) => vm.fetchChatPreivew()); // 뒤로갈 때 새로고침
+              ).then((value) {
+                vm.fetchChatPreivew();
+                userVm.fetchUserInfo();
+              }); // 뒤로갈 때 새로고침
             },
             child: const Text(
               '지역 채팅방으로 이동',
@@ -98,6 +111,8 @@ class HomePage extends StatelessWidget {
           onTap: () {
             // 채팅방으로 이동
             final vm = ref.watch(homeViewModelProvider(user).notifier);
+            final userVm =
+                ref.watch(userGlobalViewModelProvider(user.userId).notifier);
             Navigator.push(
               context,
               MaterialPageRoute(
@@ -108,7 +123,10 @@ class HomePage extends StatelessWidget {
                   );
                 },
               ),
-            ).then((value) => vm.fetchChatPreivew()); // 뒤로갈 때 새로고침
+            ).then((value) {
+              vm.fetchChatPreivew();
+              userVm.fetchUserInfo();
+            }); // 뒤로갈 때 새로고침
           },
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

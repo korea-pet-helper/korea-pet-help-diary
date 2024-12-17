@@ -29,13 +29,13 @@ class HomeViewModel extends FamilyNotifier<HomeState, User> {
 
   final chatPreviewRepo = ChatPreviewRepository();
 
-  Future<ChatPreview?> getMyChatPreview(String localCode) async {
-    final chatPreview = await chatPreviewRepo.getMyChatPreview(localCode);
+  Future<ChatPreview?> getMyChatPreview(User user) async {
+    final chatPreview = await chatPreviewRepo.getMyChatPreview(user);
     return chatPreview;
   }
 
   Future<void> fetchChatPreivew() async {
-    final myChatPreview = await getMyChatPreview(arg.localCode);
+    final myChatPreview = await getMyChatPreview(arg);
     final chatPreviewList = await chatPreviewRepo.getPreview(arg.chatRoomIds);
 
     state = HomeState(
