@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:korea_pet_help_diary/data/model/pet.dart';
 import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:path/path.dart' as path;
 
@@ -34,4 +35,35 @@ class UserRepository {
       throw Exception('이미지 업로드 실패: $e');
     }
   }
+
+  Future<bool> insert ({
+    required String userId, 
+    required String local,
+    required String localCode,
+    required String nickname,
+    required String phone,
+    required Pet pet,
+  }) async {
+    //try if the environment is safe to conduct insert
+    try {
+      //fetch instance
+      final firestore = FirebaseFirestore.instance;
+      //collection reference
+      final collectionRef = firestore.collection("Users");
+      //document reference
+      final docRef = collectionRef.doc();
+      //writing the values
+      docRef.set({
+        'nickname': nickname,
+        'local': local,
+        'localCode' : localCode,
+        'Pet' : pet,
+      });
+      return true;
+    }catch(e){
+      print(e);
+      return false;
+    }
+  }
+
 }
