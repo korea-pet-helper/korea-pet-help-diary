@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/home/home_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/join_page.dart';
 import 'package:korea_pet_help_diary/util/snackbar.dart';
@@ -32,22 +33,22 @@ class _LoginPageState extends State<LoginPage> {
       // 폼의 유효성을 검사
       try {
         // Firestore에서 아이디로 유저 문서를 찾음
-        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        final userDoc = await FirebaseFirestore.instance
             .collection('Users')
             .doc(idController.text)
             .get();
         // 유저 문서가 존재하고 비밀번호가 일치하는지 확인
         if (userDoc.exists && userDoc['password'] == passwordController.text) {
-          showCustomSnackBar(context, '로그인 성공');
+          // 유저 정보 객체 생성
+          User user = User.fromJson(userDoc.data()!);
 
-          // 로컬코드 가져오기
-          String localCode = userDoc['localCode'];
+          showCustomSnackBar(context, '로그인 성공');
 
           // 홈 페이지로 이동하면서 로컬코드 전달
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HomePage(localCode: localCode),
+              builder: (context) => HomePage(user: user),
             ),
           );
         } else {

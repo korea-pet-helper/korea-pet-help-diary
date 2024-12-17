@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/data/model/chat.dart';
+import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_view_model.dart';
 
 class ChatRoomBottomsheet extends StatelessWidget {
@@ -9,7 +11,14 @@ class ChatRoomBottomsheet extends StatelessWidget {
 
   TextEditingController controller;
   double bottomPaddingSize;
-  ChatRoomBottomsheet(this.controller, this.bottomPaddingSize);
+  ChatPreview preview;
+  User user;
+  ChatRoomBottomsheet({
+    required this.controller,
+    required this.bottomPaddingSize,
+    required this.preview,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -44,17 +53,16 @@ class ChatRoomBottomsheet extends StatelessWidget {
               onTap: () {
                 // 아무것도 없는 내용 보내지 않도록 하기
                 if (controller.text.trim().isNotEmpty) {
-                  // TODO: user 정보 받아오기
                   Chat chat = Chat(
-                      chatRoomId: '28260122',
+                      chatRoomId: preview.chatRoomId,
                       message: controller.text,
-                      nickname: '인천전봇대',
-                      userId: 'test2',
+                      nickname: user.nickname,
+                      userId: user.userId,
                       timeStamp: DateTime.now(),
-                      userImage: 'https://picsum.photos/200/300');
+                      userImage: user.image);
 
                   // 메시지 전달
-                  vm.sendChat(chat);
+                  vm.sendChat(chat, preview.local);
 
                   // 메시지 보내고 controller 에서 지우기
                   controller.text = '';

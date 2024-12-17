@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:korea_pet_help_diary/ui/pages/join/join_user_model.dart';
+import 'package:korea_pet_help_diary/data/model/pet.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
+import 'package:korea_pet_help_diary/data/repository/user_repository.dart';
 import 'package:korea_pet_help_diary/util/geolocator_helper.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_image_picker_ui.dart';
 import 'package:korea_pet_help_diary/ui/pages/join/wigets/join_textfeild_method.dart';
-import 'repository/user_firebase_repository.dart';
 import 'package:korea_pet_help_diary/util/formatter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -324,14 +325,15 @@ class _JoinPageState extends ConsumerState<JoinPage> {
                               phonePass &&
                               localPass
                           ? () async {
+                              final userRepo = UserRepository();
                               // Firebase Storage에 이미지 업로드
-                              String url =
-                                  await uploadImageToFirebase(selectedImage!);
+                              String url = await userRepo
+                                  .uploadImageToFirebase(selectedImage!);
                               setState(() {
                                 uploadedImageUrl = url; // 업로드된 URL 저장
                               });
                               try {
-                                await saveUserData(
+                                await userRepo.saveUserData(
                                   User(
                                     userId: idTextEditingController.text.trim(),
                                     image: url, // 이미지 경로

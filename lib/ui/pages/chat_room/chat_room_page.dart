@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/data/model/chat.dart';
-import 'package:korea_pet_help_diary/data/repository/chat_repository.dart';
+import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_view_model.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_bottomsheet.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_receive.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/widgets/chat_room_send.dart';
 
 class ChatRoomPage extends ConsumerStatefulWidget {
-  String chatRoomId;
-  ChatRoomPage({required this.chatRoomId});
+  ChatPreview preview;
+  User user;
+  ChatRoomPage({required this.preview, required this.user});
 
   @override
   ConsumerState<ChatRoomPage> createState() => _ChatRoomPageState();
 }
 
 class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
-  List<String> messages = [
-    '안녕하세요 처음 뵙겠습니다!안녕하세요 처음 뵙겠습니다!',
-    '강아지 키우고 있습니다',
-    '네 안녕하세요!',
-    '강아지가 너무 귀여워요',
-    '감사합니다.',
-  ];
-
   final controller = TextEditingController();
 
   @override
@@ -44,10 +38,10 @@ class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text('용현동'),
+          title: Text(widget.preview.local),
         ),
         body: StreamBuilder<List<Chat>?>(
-          stream: vm.snapshotChatList('28260122'),
+          stream: vm.snapshotChatList(widget.preview.chatRoomId),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               // 데이터가 없을 때
@@ -75,25 +69,47 @@ class _ChatRoomPageState extends ConsumerState<ChatRoomPage> {
                 separatorBuilder: (context, index) => SizedBox(height: 2),
                 itemBuilder: (context, index) {
                   final chat = data[index];
-                  // 상대방
-                  // TODO: 상대방과 나 구분짓는 코드 필요
-                  if (index == 0) {
-                    return ChatRoomReceive(showProfile: true, chat: chat);
-                  } else if (index == 1) {
-                    return ChatRoomReceive(showProfile: false, chat: chat);
-                  } else if (index == 4) {
-                    return ChatRoomReceive(showProfile: true, chat: chat);
+                  // 채팅 정보의 userId 와 로그인한 유저 정보가 같으면 send
+                  if (chat.userId == widget.user.userId) {
+                    return ChatRoomSend(chat: chat);
+                  } else {
+                    // 상대방
+                    bool showProfile = true;
+                    if (index > 0) {
+                      final pastChat = data[index - 1];
+                      showProfile = isShowProfile(pastChat, chat);
+                    }
+                    return ChatRoomReceive(
+                        showProfile: showProfile, chat: chat);
                   }
-
-                  // 나
-                  return ChatRoomSend(chat: chat);
                 },
               );
             }
           },
         ),
-        bottomSheet: ChatRoomBottomsheet(controller, bottomPaddingSize),
+        bottomSheet: ChatRoomBottomsheet(
+          controller: controller,
+          bottomPaddingSize: bottomPaddingSize,
+          preview: widget.preview,
+          user: widget.user,
+        ),
       ),
     );
+  }
+
+  /// 프로필 보여줄지 말지 확인용
+  /// ture: 프로필 O, false: 프로필 X
+  bool isShowProfile(Chat pastChat, Chat presentChat) {
+    // 지난 채팅의 userId 와 현재 채팅의 userId 가 다르면 true
+    if (pastChat.userId != presentChat.userId) {
+      return true;
+    } else if (presentChat.timeStamp.difference(pastChat.timeStamp).inSeconds >
+            60 ||
+        pastChat.timeStamp.minute != presentChat.timeStamp.minute) {
+      // 지난 채팅 시간과 현재 채팅 시간이 1분 이상 차이나면 true
+      return true;
+    } else {
+      return false;
+    }
   }
 }

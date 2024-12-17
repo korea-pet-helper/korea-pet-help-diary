@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/home/home_view_model.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
 class HomePage extends StatelessWidget {
-  String localCode;
-  HomePage({required this.localCode});
+  User user;
+  HomePage({required this.user});
 
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, ref, child) {
-      final state = ref.watch(homeViewModelProvider(localCode));
+      final state = ref.watch(homeViewModelProvider(user.localCode));
       return Scaffold(
         appBar: AppBar(
-          // TODO: 유저의 동네 가져오기
-          title: Text('삼성동'),
+          title: Text(user.local),
           actions: [
             GestureDetector(
               onTap: () {
@@ -55,7 +55,10 @@ class HomePage extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) {
-                return ChatRoomPage(chatRoomId: preview.chatRoomId);
+                return ChatRoomPage(
+                  preview: preview,
+                  user: user,
+                );
               },
             ),
           );
