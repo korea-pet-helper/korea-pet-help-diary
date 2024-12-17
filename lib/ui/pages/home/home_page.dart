@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                // TODO: myProfile 페이지로 이동
+                // TODO: myProfile 페이지로 이동 then => vm.fetchChatPreivew()
                 print('myProfile 이동');
               },
               // 내 프로필 페이지로 이동할 아이콘
@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
                     );
                   },
                 ),
-              );
+              ).then((value) => vm.fetchChatPreivew()); // 뒤로갈 때 새로고침
             },
             child: const Text(
               '지역 채팅방으로 이동',
@@ -85,70 +85,73 @@ class HomePage extends StatelessWidget {
 
   /// 채팅방 박스
   Widget item(ChatPreview preview) {
-    return Builder(builder: (context) {
-      return GestureDetector(
-        onTap: () {
-          // 채팅방으로 이동
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return ChatRoomPage(
-                  preview: preview,
-                  user: user,
-                );
-              },
-            ),
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          height: 100,
-          decoration: BoxDecoration(
-            color: Colors.transparent,
-            border: Border(
-              bottom: BorderSide(color: Colors.grey[400]!),
-            ),
-          ),
-          child: Row(
-            children: [
-              UserProfileImage(
-                size: 60,
-                imageUrl: preview.thumbnail,
+    return Consumer(
+      builder: (context, ref, child) {
+        return GestureDetector(
+          onTap: () {
+            // 채팅방으로 이동
+            final vm = ref.watch(homeViewModelProvider(user).notifier);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return ChatRoomPage(
+                    preview: preview,
+                    user: user,
+                  );
+                },
               ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          preview.local,
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        const Spacer(),
-                        Text(
-                          DateTimeFormat.formatString(preview.timeStamp),
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      preview.message,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.black54,
-                      ),
-                    ),
-                  ],
+            ).then((value) => vm.fetchChatPreivew()); // 뒤로갈 때 새로고침
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+            height: 100,
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border(
+                bottom: BorderSide(color: Colors.grey[400]!),
+              ),
+            ),
+            child: Row(
+              children: [
+                UserProfileImage(
+                  size: 60,
+                  imageUrl: preview.thumbnail,
                 ),
-              ),
-            ],
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            preview.local,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          const Spacer(),
+                          Text(
+                            DateTimeFormat.formatString(preview.timeStamp),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Text(
+                        preview.message,
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }
