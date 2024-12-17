@@ -4,6 +4,7 @@ import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
 import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/ui/pages/chat_room/chat_room_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/home/home_view_model.dart';
+import 'package:korea_pet_help_diary/ui/pages/profile_fix/profile_fix_page.dart';
 import 'package:korea_pet_help_diary/ui/widgets/user_profile_image.dart';
 import 'package:korea_pet_help_diary/util/date_time_format.dart';
 
@@ -22,8 +23,14 @@ class HomePage extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                // TODO: myProfile 페이지로 이동 then => vm.fetchChatPreivew()
-                print('myProfile 이동');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return ProfileFixPage(user);
+                    },
+                  ),
+                ).then((value) => vm.fetchChatPreivew());
               },
               // 내 프로필 페이지로 이동할 아이콘
               child: Container(
@@ -56,7 +63,7 @@ class HomePage extends StatelessWidget {
           width: 200,
           child: ElevatedButton(
             onPressed: () async {
-              final chatPreview = await vm.getMyChatPreview(user.localCode);
+              final chatPreview = await vm.getMyChatPreview(user);
               // 채팅방으로 이동
               Navigator.push(
                 context,
