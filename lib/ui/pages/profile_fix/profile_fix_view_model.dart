@@ -67,12 +67,10 @@ class ProfileFixViewModel extends AutoDisposeFamilyNotifier<fixState, User?>{
       return result;
     }
   }
-
-  //VM admin
-  final profileFixViewModelProvider = NotifierProvider.autoDispose.family<ProfileFixViewModel,FixState, User?>(
-    (){
-      return ProfileFixViewModel();
-    }
-  );
-
 }
+//VM admin
+final profileFixViewModelProvider = NotifierProvider.autoDispose.family<ProfileFixViewModel,FixState, User?>(
+  (){
+    return ProfileFixViewModel();
+  }
+);
