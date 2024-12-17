@@ -12,7 +12,7 @@ class FixState {
 
 //VM
 //Todo: method for updating localCodes for each 'local' should be implemented
-class ProfileFixViewModel extends AutoDisposeFamilyNotifier<fixState, User?>{
+class ProfileFixViewModel extends AutoDisposeFamilyNotifier<FixState, User?>{
   @override
   FixState build(User? arg) {
     return FixState(false);
@@ -20,14 +20,13 @@ class ProfileFixViewModel extends AutoDisposeFamilyNotifier<fixState, User?>{
 
   //under updating
   //double check if done correctly
-  Future<bool> insert({
-    required String userId,
+  Future<bool> reset({
+    //String userId,
     required String imageUrl,
     required String local,
     required String localCode,
     required String nickname,
-    required String password,
-    required String phone,
+    //required String password,
     required Pet pet,
   }) async{
     final userRepository = UserRepository();
@@ -43,13 +42,12 @@ class ProfileFixViewModel extends AutoDisposeFamilyNotifier<fixState, User?>{
         localCode: localCode,
         imageUrl: imageUrl,
         pet: pet,
-        userId: userId,
-        phone: phone,
+        userId: arg!.userId,
         //adding phone here for future extensions
         //phone: phone,
       );
       state = FixState(false);
-      await Future.delayed(Duration(microseconds: 500));
+      await Future.delayed(const Duration(microseconds: 500));
       return result;
 
     }else{
@@ -63,7 +61,7 @@ class ProfileFixViewModel extends AutoDisposeFamilyNotifier<fixState, User?>{
         pet: pet,
       );
       state = FixState(false);
-      await Future.delayed(Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 300));
       return result;
     }
   }

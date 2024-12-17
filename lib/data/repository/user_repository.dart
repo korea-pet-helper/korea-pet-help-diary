@@ -42,7 +42,6 @@ class UserRepository {
     required String local,
     required String localCode,
     required String nickname,
-    required String phone,
     required String imageUrl,
     required Pet pet,
   }) async {

@@ -8,7 +8,7 @@ class User {
   String nickname;
   String password;
   String phone;
-  String petCharacter;
+  //String petCharacter;
   Pet pet;
 
   User({
