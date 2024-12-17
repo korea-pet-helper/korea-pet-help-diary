@@ -19,7 +19,7 @@ class User {
     required this.nickname,
     required this.password,
     required this.phone,
-    this.petCharacter = "Default Status",
+    //this.petCharacter = "Default Status",
     required this.pet, // Pet 객체
   });
 
@@ -32,7 +32,7 @@ class User {
           nickname: map['nickname'],
           password: map['password'],
           phone: map['phone'],
-          petCharacter: map['petCharacter'],
+          //petCharacter: map['petCharacter'],
           pet: Pet.fromJson(map['pet']),
         );
 
@@ -45,7 +45,7 @@ class User {
       'nickname': nickname,
       'password': password,
       'phone': phone,
-      'petCharacter':petCharacter,
+      //'petCharacter':petCharacter,
       'pet': pet.toMap(),
     };
   }
