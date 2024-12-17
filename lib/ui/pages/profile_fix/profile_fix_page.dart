@@ -23,7 +23,8 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
   late TextEditingController charactersController = TextEditingController(text: widget.user?.pet.petInformation ?? "");
   //late TextEditingController myNeighborController = TextEditingController(text: widget.user?.local ?? ""); //fix this to searching later
 
-  late Map<String, dynamic> location = GeolocatorHelper.getAdministrativeArea() as Map<String, dynamic>;
+  //Map<String, dynamic>? location = GeolocatorHelper.getAdministrativeArea().then();
+  Map<String, String> location = {'name': '서울시청'}; //dummy
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -182,7 +183,7 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                             //making the icon to go to the left
                             const SizedBox(height: 50,width: 50, child: Icon(Icons.location_on_outlined)),
                             Text(
-                              location['name'], 
+                              "서울시청",//location['name'], 
                               style: const TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w200,
@@ -218,8 +219,8 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                     final resetResult = await vm.reset(
                       //userId: '',
                       imageUrl: '', //ToDo: needs fix
-                      local: ,
-                      localCode: '', //ToDo: needs fix
+                      local: "서울시청",
+                      localCode: "28260122", //ToDo: needs fix
                       //password: '',
                       nickname: nickNameController.text,
                       //phone: '',
@@ -227,12 +228,15 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
                     );
                     if(resetResult) {
                       Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return HomePage(user: '');//this needs to be filled
+                        return HomePage(user: Sample);//this needs to be filled
                       }));
                     };
                     }
-                  }
-                child: const Text("수정하기"),
+                },
+                child: const SizedBox(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: Text("수정하기")),
               ),
             ],   
           
@@ -242,3 +246,5 @@ class _ProfileFixPageState extends ConsumerState<ProfileFixPage> {
     );
   }
 }
+
+User Sample = User(userId: 'wwwwww', image: "", local: "인천광역시 서구 청라동", localCode: "28260122", nickname: 'ㅂㅂㅂㅂㅂ', password: "qqqqq", phone: '111', pet: Pet(petAge: 0, petDogCat: ",", petInformation: "", petName: ""));
