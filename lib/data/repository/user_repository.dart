@@ -37,8 +37,8 @@ class UserRepository {
     }
   }
 
-  Future<bool> insert ({
-    required String userId, 
+  Future<bool> insert({
+    required String userId,
     required String local,
     required String localCode,
     required String nickname,
@@ -58,11 +58,11 @@ class UserRepository {
         'nickname': nickname,
         'imageUrl': imageUrl,
         'local': local,
-        'localCode' : localCode,
-        'Pet' : pet,
+        'localCode': localCode,
+        'Pet': pet,
       });
       return true;
-    }catch(e){
+    } catch (e) {
       print(e);
       return false;
     }
@@ -76,7 +76,7 @@ class UserRepository {
     required String localCode,
     required Pet pet,
   }) async {
-    try{
+    try {
       //fetch instance
       final firestore = FirebaseFirestore.instance;
       //collection reference
@@ -89,14 +89,43 @@ class UserRepository {
         'nickname': nickname,
         'imageUrl': imageUrl,
         'local': local,
-        'localCode' : localCode,
-        'Pet' : pet,
+        'localCode': localCode,
+        'Pet': pet,
       });
       return true;
-    }catch(e){
+    } catch (e) {
       print(e);
       return false;
     }
   }
 
+  // 메시지 보내면 참여한 채팅방 id 업데이트
+  Future<void> updateChatRoomIds(String userId, String localCode) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      await firestore.collection("Users").doc(userId).update({
+        'chatRoomIds': FieldValue.arrayUnion([localCode]),
+      });
+    } catch (e) {
+      print('updateChatRoomIds => $e');
+    }
+  }
+
+  /// 유저 데이터 가져오기
+  Future<User?> getUser(String userId) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+
+      return firestore.collection('Users').doc(userId).get().then(
+        (snapshot) {
+          final map = snapshot.data();
+          return User.fromJson(map!);
+        },
+      );
+    } catch (e) {
+      print('getUser => $e');
+      return null;
+    }
+  }
 }

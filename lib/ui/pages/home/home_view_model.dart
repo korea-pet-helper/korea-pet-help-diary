@@ -1,26 +1,49 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/data/model/chat_preview.dart';
+import 'package:korea_pet_help_diary/data/model/user.dart';
 import 'package:korea_pet_help_diary/data/repository/chat_preview_repository.dart';
-import 'package:korea_pet_help_diary/data/repository/vworld_repository.dart';
 
-class HomeViewModel extends FamilyNotifier<List<ChatPreview?>, String> {
+class HomeState {
+  ChatPreview? chatPreview;
+  List<ChatPreview>? chatPreviewList;
+
+  HomeState({required this.chatPreview, required this.chatPreviewList});
+
+  HomeState copy({
+    ChatPreview? chatPreview,
+    required List<ChatPreview> chatPreviewList,
+  }) {
+    return HomeState(
+      chatPreview: chatPreview ?? this.chatPreview,
+      chatPreviewList: chatPreviewList,
+    );
+  }
+}
+
+class HomeViewModel extends FamilyNotifier<HomeState, User> {
   @override
-  List<ChatPreview> build(String arg) {
+  HomeState build(User arg) {
     fetchChatPreivew();
-    return [];
+    return HomeState(chatPreview: null, chatPreviewList: []);
   }
 
-  /// 채팅 목록 가져오기
-  Future<void> fetchChatPreivew() async {
-    final vworldRepo = VworldRepository();
-    final result = await vworldRepo.findNearbyLocation(arg);
+  final chatPreviewRepo = ChatPreviewRepository();
 
-    final chatPrevierRepo = ChatPreviewRepository();
-    state = await chatPrevierRepo.getPreview(result);
+  Future<ChatPreview?> getMyChatPreview(User user) async {
+    final chatPreview = await chatPreviewRepo.getMyChatPreview(user);
+    return chatPreview;
+  }
+
+  Future<void> fetchChatPreivew() async {
+    final myChatPreview = await getMyChatPreview(arg);
+    final chatPreviewList = await chatPreviewRepo.getPreview(arg.chatRoomIds);
+
+    state = HomeState(
+        chatPreview: myChatPreview, chatPreviewList: chatPreviewList!);
   }
 }
 
 final homeViewModelProvider =
-    NotifierProvider.family<HomeViewModel, List<ChatPreview?>, String>(() {
+    NotifierProvider.family<HomeViewModel, HomeState, User>(() {
   return HomeViewModel();
 });
