@@ -79,26 +79,31 @@ class _DummyPageState extends State<DummyPage> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            ToggleButtons(
-                              color: Colors.black.withOpacity(0.6),
-                              selectedColor: Colors.white,
-                              fillColor: Colors.black,
-                              splashColor: Colors.black,
-                              borderRadius: BorderRadius.circular(8.0),
-                              isSelected: isSelected,
-                              onPressed:toggleSelect,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal:10),
-                                  child: const SizedBox(
-                                    height:double.infinity,
-                                    child: Text("개", style: TextStyle(fontSize: 12)),),
-                                ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal:10),
-                                  child: const SizedBox(
-                                    height:double.infinity,
-                                    child: Text("고양이", style: TextStyle(fontSize: 12)),),
+                                ToggleButtons(
+                                  color: Colors.black.withOpacity(0.6),
+                                  selectedColor: Colors.white,
+                                  fillColor: Colors.black,
+                                  splashColor: Colors.black,
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  isSelected: isSelected,
+                                  onPressed:toggleSelect,
+                                  children: [
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(horizontal:10),
+                                      child: const SizedBox(
+                                        height:double.infinity,
+                                        child: Text("개", style: TextStyle(fontSize: 12)),),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.symmetric(horizontal:10),
+                                      child: const SizedBox(
+                                        height:double.infinity,
+                                        child: Text("고양이", style: TextStyle(fontSize: 12)),),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
