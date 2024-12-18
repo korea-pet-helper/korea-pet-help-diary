@@ -56,14 +56,14 @@ class UserRepository {
       //writing the values
       docRef.set({
         'nickname': nickname,
-        'imageUrl': imageUrl,
+        'image': imageUrl,
         'local': local,
         'localCode': localCode,
-        'Pet': pet,
+        'pet': pet.toMap(),
       });
       return true;
     } catch (e) {
-      print(e);
+      print('insert => $e');
       return false;
     }
   }
@@ -82,19 +82,18 @@ class UserRepository {
       //collection reference
       final collectionRef = firestore.collection("Users");
       //document reference
-      final docRef = collectionRef.doc();
+      final docRef = collectionRef.doc(userId);
       //writing the values
       docRef.update({
-        'userID': userId,
         'nickname': nickname,
-        'imageUrl': imageUrl,
+        'image': imageUrl,
         'local': local,
         'localCode': localCode,
-        'Pet': pet,
+        'pet': pet.toMap(),
       });
       return true;
     } catch (e) {
-      print(e);
+      print('update => $e');
       return false;
     }
   }
