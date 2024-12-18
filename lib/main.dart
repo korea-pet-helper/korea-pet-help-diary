@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:korea_pet_help_diary/firebase_options.dart';
+import 'package:korea_pet_help_diary/ui/pages/profile_fix/dummy_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/profile_fix/profile_fix_page.dart';
 import 'package:korea_pet_help_diary/ui/pages/theme/theme.dart';
 import 'package:korea_pet_help_diary/ui/pages/login/login_page.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: appTheme,
-      home: ProfileFixPage(null), //loginpage(),
+      home: DummyPage(),
     );
   }
 }
